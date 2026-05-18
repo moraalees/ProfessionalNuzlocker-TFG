@@ -1,0 +1,43 @@
+package com.example.professionalnuzlocker.data.model.enum_classes
+
+import com.example.professionalnuzlocker.R
+
+enum class Rutas(val nombreRuta: String, val imagen: Int) {
+    PUEBLO_ARCILLA("Pueblo Arcilla", R.drawable.pueblo_arcilla),
+    RUTA_1("Ruta 1", R.drawable.ruta1),
+    RUTA_2("Ruta 2", R.drawable.ruta2),
+    SOLAR_DE_LOS_SUENOS("Solar de los Sueños", R.drawable.solar_suenos),
+    RUTA_3("Ruta 3", R.drawable.ruta3),
+    CUEVA_MANANTIAL("Cueva Manantial", R.drawable.cueva_manantial),
+    BOSQUE_AZULEJO("Bosque Azulejo", R.drawable.bosque_azulejo),
+    RUTA_4("Ruta 4", R.drawable.ruta4),
+    ZONA_DESIERTO("Zona Desierto", R.drawable.zona_desierto),
+    CASTILLO_ANCESTRAL("Castillo Ancestral", R.drawable.castillo_ancestral),
+    RUTA_16("Ruta 16",R.drawable.ruta16),
+    BOSQUE_PERDIDOS("Bosque Perdidos", R.drawable.bosque_perdidos),
+    RUTA_5("Ruta 5", R.drawable.ruta5),
+    PUENTE_DE_FAYENZA("Puente de Fayenza", R.drawable.puente_fayenza),
+    ALMACENES_FRIGORIFICOS("Almacenes Frigoríficos", R.drawable.almacenes_frigorificos),
+    RUTA_6("Ruta 6", R.drawable.ruta6),
+    CUEVA_ELECTRORROCA("Cueva Electrorroca", R.drawable.cueva_electrorroca),
+    RUTA_7("Ruta 7", R.drawable.ruta7),
+    TORRE_DE_LOS_CIELOS("Torre de los Cielos", R.drawable.torre_cielos),
+    MONTE_TUERCA("Monte Tuerca", R.drawable.monte_tuerca),
+    RUTA_17("Ruta 17", R.drawable.ruta17),
+    LABORATORIO_P_P("Laboratorio P+P", R.drawable.laboratorio_p_p),
+    RUTA_18("Ruta 18", R.drawable.ruta18),
+    CIUDAD_GRES("Ciudad Gres", R.drawable.ciudad_gres),
+    CIUDAD_FAYENZA("Ciudad Fayenza", R.drawable.ciudad_fayenza),
+    CUEVA_LOZA("Cueva Loza", R.drawable.cueva_loza),
+    ESTANCIA_ORIENTACION("Estancia Orientación", R.drawable.cueva_loza),
+    CLARO_FILOSOFIA("Claro Filosofía", R.drawable.bosque_azulejo),
+    CIUDAD_TEJA("Ciudad Teja", R.drawable.ciudad_teja),
+    TORRE_DUODRACO("Torre Duodraco", R.drawable.torre_duodraco),
+    RUTA_8("Ruta 8", R.drawable.ruta8),
+    PANTANO_TEJA("Pantano Teja", R.drawable.pantajo_teja),
+    RUTA_9("Ruta 9", R.drawable.ruta9),
+    RUTA_10("Ruta 10", R.drawable.ruta10),
+    CALLE_VICTORIA("Calle Victoria", R.drawable.calle_victoria),
+    CAMARA_PRUEBAS("Cámara de Pruebas", R.drawable.calle_victoria),
+    PALACIO_DE_N("Palacio de N", R.drawable.palacio_n)
+}
