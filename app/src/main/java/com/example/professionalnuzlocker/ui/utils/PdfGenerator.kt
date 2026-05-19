@@ -35,6 +35,15 @@ private val PDF_BRONZE    = 0xFFCD7F32.toInt()
 private val PDF_VICTORY   = 0xFF4CAF50.toInt()
 private val PDF_BLACK     = 0xFF000000.toInt()
 
+/**
+ * Genera un PDF de resumen de la aventura Nuzlocke a partir de [datos] y lo guarda en la carpeta
+ * de Descargas del dispositivo con el nombre `resumen_aventura.pdf`.
+ *
+ * El documento incluye: resultado (victoria/derrota), vidas restantes, estadísticas de captura,
+ * top 3 de Pokémon más usados, combates más mortales, rivales más letales, distribución de tipos
+ * y total de consultas al asistente IA. Se pagina automáticamente cuando el contenido supera
+ * el área visible de la página A4.
+ */
 fun generarPDF(context: Context, datos: EstadisticasData) {
     val documento = PdfDocument()
     var numeroPagina = 1
@@ -215,17 +224,20 @@ fun generarPDF(context: Context, datos: EstadisticasData) {
     documento.close()
 }
 
+/** Devuelve un [Paint] de relleno sólido con el [color] ARGB indicado. */
 private fun rellenarColor(color: Int) = Paint(Paint.ANTI_ALIAS_FLAG).apply {
     this.color = color
     style = Paint.Style.FILL
 }
 
+/** Devuelve un [Paint] de trazo con el [color] ARGB y el grosor [width] indicados. */
 private fun generarBorde(color: Int, width: Float) = Paint(Paint.ANTI_ALIAS_FLAG).apply {
     this.color = color
     style = Paint.Style.STROKE
     strokeWidth = width
 }
 
+/** Devuelve un [Paint] de texto con el tamaño [size], [color], negrita opcional y alineación [align]. */
 private fun generarTexto(
     size: Float,
     color: Int,
@@ -238,6 +250,7 @@ private fun generarTexto(
     textAlign = align
 }
 
+/** Persiste [doc] en la carpeta Descargas pública usando MediaStore (API 29+) o acceso directo a fichero en versiones anteriores. */
 private fun guardarPDF(context: Context, doc: PdfDocument) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         val values = ContentValues().apply {

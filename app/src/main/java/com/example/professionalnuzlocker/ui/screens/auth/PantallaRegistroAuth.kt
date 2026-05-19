@@ -47,6 +47,12 @@ import com.example.professionalnuzlocker.ui.theme.ColorOscuro
 import com.example.professionalnuzlocker.ui.theme.ColorRojo
 import com.example.professionalnuzlocker.ui.theme.ColorRojoVibrante
 
+/**
+ * Pantalla de creación de cuenta con campos de correo, contraseña y confirmación.
+ * Valida formato, longitud mínima y coincidencia de contraseñas antes de llamar a
+ * [AuthViewModel.registrar]; en caso de éxito invoca [onRegistroExitoso].
+ * [irLogin] navega de vuelta a [PantallaLogin].
+ */
 @Composable
 fun PantallaRegistroAuth(
     onRegistroExitoso: () -> Unit,

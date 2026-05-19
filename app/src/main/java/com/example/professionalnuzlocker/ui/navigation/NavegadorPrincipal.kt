@@ -23,6 +23,17 @@ import com.example.professionalnuzlocker.ui.screens.stats.PantallaEstadisticas
 import com.example.professionalnuzlocker.ui.utils.AudioManager
 import com.google.firebase.auth.FirebaseAuth
 
+/**
+ * Composable raíz que configura el grafo de navegación completo de la app.
+ *
+ * Define 9 destinos con [NavHost]: login y registro de auth, inicio, guía, formulario
+ * de nueva partida, registro de juego, estadísticas, Pokédex, datos del juego y chat IA.
+ * La pantalla inicial es [RutasNavegacion.HOME] si Firebase tiene sesión activa, o
+ * [RutasNavegacion.LOGIN] en caso contrario. La bottom bar solo se muestra en las 4
+ * pantallas principales del juego (registro, Pokédex, datos y chat IA).
+ *
+ * @param audioManager Gestor de audio pasado a cada pantalla que lo necesite.
+ */
 @Composable
 fun NavegadorPrincipal(audioManager: AudioManager) {
     val navController = rememberNavController()

@@ -47,6 +47,12 @@ import com.example.professionalnuzlocker.ui.theme.ColorOscuro
 import com.example.professionalnuzlocker.ui.theme.ColorRojo
 import com.example.professionalnuzlocker.ui.theme.ColorRojoVibrante
 
+/**
+ * Pantalla de inicio de sesión con campos de correo y contraseña.
+ * Valida el formato del correo y la longitud mínima de la contraseña antes de llamar
+ * a [AuthViewModel.login]; en caso de éxito invoca [onLoginExitoso] y ante error
+ * muestra el mensaje devuelto por el ViewModel. [irRegistro] navega a [PantallaRegistroAuth].
+ */
 @Composable
 fun PantallaLogin(
     onLoginExitoso: () -> Unit,

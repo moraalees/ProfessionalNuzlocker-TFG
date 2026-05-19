@@ -76,6 +76,32 @@ import com.example.professionalnuzlocker.ui.utils.AudioManager
 
 private val fondoCombate = Brush.verticalGradient(colors = listOf(ColorOscuro, Color(0xFF1A0A0E), ColorRojo))
 
+/**
+ * Tarjeta de un combate importante del Nuzlocke con el equipo rival y el estado del combate.
+ *
+ * El color del borde varía según el tipo: rival (rojo vibrante), gimnasio (verde/Snivy),
+ * Equipo Plasma (naranja/Tepig) o Liga Pokémon (azul/Oshawott). Un combate solo se desbloquea
+ * cuando todos los anteriores han sido ganados. Las casillas del equipo rival son pulsables
+ * para ver el detalle del Pokémon. El botón "Combatir" abre [PantallaCombateDialog] con
+ * transición de audio al tema de batalla.
+ *
+ * Flujo de resultado tras pulsar VS:
+ * 1. [DialogResultadoCombate] → el usuario elige victoria / victoria con bajas / derrota.
+ * 2. Si hay bajas → [DialogSeleccionMuertos] para marcar los Pokémon caídos.
+ * 3. Por cada Pokémon muerto → [DialogFormMuerteCombate] para registrar la causa de muerte.
+ * 4. Se disparan los callbacks correspondientes ([onBatallaGanada], [onBatallaPerdida], [onPokemonMuerto]).
+ *
+ * @param combate Datos del combate a mostrar.
+ * @param resultados Historial de resultados de todos los combates para calcular estado y desbloqueo.
+ * @param combatesOrdenados Lista completa de combates en orden para calcular el desbloqueo.
+ * @param equipo Equipo activo del jugador.
+ * @param partida Partida activa, necesaria para mostrar el avatar del jugador en la pantalla de combate.
+ * @param bloqueado Si true, oculta el botón de combatir aunque el combate esté desbloqueado.
+ * @param audioManager Gestor de audio opcional para efectos y música.
+ * @param onBatallaGanada Se llama con el ID del combate y los IDs del equipo usado al ganar.
+ * @param onBatallaPerdida Se llama con el ID del combate al perder.
+ * @param onPokemonMuerto Se llama por cada Pokémon que muere: ID del Pokémon, tipo de entrenador, ataque e ID del Pokémon asesino.
+ */
 @Composable
 fun CombateItemComponente(
     combate: CombateImportante,
@@ -370,6 +396,7 @@ fun CombateItemComponente(
     }
 }
 
+/** Diálogo fullscreen de combate con el equipo del jugador, el del rival y el botón VS para registrar el resultado. */
 @Composable
 private fun PantallaCombateDialog(
     combate: CombateImportante,
@@ -637,6 +664,7 @@ private fun PantallaCombateDialog(
     }
 }
 
+/** Diálogo que pregunta al jugador cómo fue el combate: victoria limpia, victoria con bajas o derrota. */
 @Composable
 private fun DialogResultadoCombate(
     equipo: List<PokemonCapturado>,
@@ -731,6 +759,7 @@ private fun DialogResultadoCombate(
     }
 }
 
+/** Diálogo con lista multiselección para marcar qué Pokémon del equipo han muerto en el combate. */
 @Composable
 private fun DialogSeleccionMuertos(
     equipo: List<PokemonCapturado>,
@@ -885,6 +914,7 @@ private fun DialogSeleccionMuertos(
     }
 }
 
+/** Formulario para registrar la causa de muerte de un Pokémon: tipo de entrenador, Pokémon asesino (buscable) y ataque opcional. */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun DialogFormMuerteCombate(
@@ -1145,6 +1175,7 @@ private fun DialogFormMuerteCombate(
     }
 }
 
+/** Casilla circular con el sprite del Pokémon del jugador usando un gradiente de sus tipos; vacía si no hay Pokémon. */
 @Composable
 private fun CasillasPokemonEntrenador(
     cap: PokemonCapturado?,
@@ -1202,6 +1233,7 @@ private fun CasillasPokemonEntrenador(
 }
 
 
+/** Casilla circular con el sprite del Pokémon rival, en escala de grises si el combate está bloqueado; pulsable para ver su detalle. */
 @Composable
 private fun CasillaPokemonRival(rival: PokemonRival?, desbloqueado: Boolean = true, onClick: () -> Unit) {
     val ocupado = rival?.especie != null
@@ -1249,6 +1281,7 @@ private fun CasillaPokemonRival(rival: PokemonRival?, desbloqueado: Boolean = tr
 }
 
 
+/** Diálogo con la ficha completa de un Pokémon rival: nivel, tipos, objeto equipado y todos sus movimientos. */
 @Composable
 private fun DialogDetallePokemonRival(
     pokemonRival: PokemonRival,
@@ -1362,6 +1395,7 @@ private fun DialogDetallePokemonRival(
     }
 }
 
+/** Etiqueta de sección en mayúsculas y tono atenuado para los apartados del formulario de muerte. */
 @Composable
 private fun HelperSeccionTituloFormMuerte(texto: String) {
     Text(
@@ -1373,6 +1407,7 @@ private fun HelperSeccionTituloFormMuerte(texto: String) {
     )
 }
 
+/** Etiqueta con el color de fondo del tipo Pokémon y texto claro u oscuro según la luminancia. */
 @Composable
 private fun TipoPokemonMedalla(tipo: TipoPokemon) {
     val textColor = if (tipo.color.luminance() > 0.35f) Color(0xFF111111) else ColorClaro
@@ -1390,6 +1425,7 @@ private fun TipoPokemonMedalla(tipo: TipoPokemon) {
     }
 }
 
+/** Etiqueta con el color del tipo de un movimiento rival para mostrar su nombre en la ficha de detalle. */
 @Composable
 private fun MovimientoRivalMedalla(nombre: String, tipo: TipoPokemon, modifier: Modifier = Modifier) {
     val bgColor = tipo.color.copy(alpha = 0.82f)
@@ -1413,6 +1449,7 @@ private fun MovimientoRivalMedalla(nombre: String, tipo: TipoPokemon, modifier: 
     }
 }
 
+/** Etiqueta de categoría del combate (Rival / Gimnasio / Equipo Plasma / Liga) con el color asociado al tipo. */
 @Composable
 private fun CajaTipoCombateImportante(tipo: TipoCombate, color: Color) {
     val etiqueta = when (tipo) {
@@ -1436,6 +1473,7 @@ private fun CajaTipoCombateImportante(tipo: TipoCombate, color: Color) {
     }
 }
 
+/** Gradiente vertical con los colores de los dos tipos del Pokémon; monocromático si no hay segundo tipo. */
 private fun tipoBrush(tipo1: TipoPokemon, tipo2: TipoPokemon?, alpha: Float): Brush =
     if (tipo2 != null) {
         Brush.verticalGradient(

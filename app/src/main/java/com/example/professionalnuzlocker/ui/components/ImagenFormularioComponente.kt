@@ -16,6 +16,19 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.professionalnuzlocker.ui.theme.ColorRojo
 
+/**
+ * Imagen centrada sobre fondo negro dentro de un recuadro con bordes redondeados.
+ *
+ * La imagen ocupa el 85% del área interior. Útil para mostrar sprites de Pokémon,
+ * versiones del juego u otras imágenes en el formulario de nueva partida.
+ *
+ * @param resId DrawableRes de la imagen a mostrar.
+ * @param descripcionImagen Descripción para accesibilidad (contentDescription).
+ * @param tamano Tamaño total del recuadro (por defecto 150dp).
+ * @param colorBorde Color del borde (por defecto [ColorRojo]).
+ * @param anchuraBorde Grosor del borde (por defecto 2dp).
+ * @param cornerRadius Radio de las esquinas (por defecto 12dp).
+ */
 @Composable
 fun ImagenEnRecuadro(
     resId: Int,

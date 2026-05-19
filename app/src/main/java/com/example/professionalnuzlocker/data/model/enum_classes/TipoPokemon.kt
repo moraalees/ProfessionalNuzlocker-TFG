@@ -2,6 +2,7 @@ package com.example.professionalnuzlocker.data.model.enum_classes
 
 import androidx.compose.ui.graphics.Color
 
+/** Tipos Pokémon del juego, cada uno con su color asociado para mostrarlo en la UI. */
 enum class TipoPokemon(val color: Color) {
     NORMAL(Color(0xFFEEEAEA)),
     FUEGO(Color(0xFFEE8130)),

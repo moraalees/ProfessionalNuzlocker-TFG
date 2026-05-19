@@ -2,6 +2,7 @@ package com.example.professionalnuzlocker.data.model
 
 import com.google.firebase.Timestamp
 
+/** Snapshot completo de una partida Nuzlocke: versión del juego, datos del jugador, equipo activo, PC, muertos, historial de combates, encuentros por ruta, vidas restantes y contador de consultas a la IA. */
 data class Partida(
     val versionJuego: String? = null,
     val nombreJugador: String = "",

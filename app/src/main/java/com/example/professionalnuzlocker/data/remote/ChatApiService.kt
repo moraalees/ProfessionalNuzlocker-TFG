@@ -10,7 +10,15 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 import java.util.concurrent.TimeUnit
 
+/**
+ * Interfaz Retrofit para comunicarse con el backend de la IA del Nuzlocker.
+ *
+ * El único endpoint es `POST /chat`, que recibe un [ChatPregunta] con el mensaje
+ * del jugador y el ID de la partida, y devuelve una [ChatRespuesta].
+ * La instancia lista para usar se obtiene desde [ChatApi.service].
+ */
 interface ChatApiService {
+    /** Envía un mensaje al endpoint /chat del backend con el token de autenticación y devuelve la respuesta de la IA. */
     @POST("chat")
     suspend fun enviarMensaje(
         @Header("Authorization") token: String,
@@ -18,6 +26,12 @@ interface ChatApiService {
     ): ChatRespuesta
 }
 
+/**
+ * Singleton que provee la instancia de [ChatApiService] lista para usar.
+ *
+ * Configura un [OkHttpClient] con timeouts de 60 segundos para dar margen
+ * a las respuestas lentas del modelo de IA.
+ */
 object ChatApi {
     private val client = OkHttpClient.Builder()
         .connectTimeout(60, TimeUnit.SECONDS)

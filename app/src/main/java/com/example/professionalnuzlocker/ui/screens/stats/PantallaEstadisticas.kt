@@ -67,6 +67,14 @@ import com.example.professionalnuzlocker.ui.utils.generarPDF
 
 
 
+/**
+ * Pantalla de estadísticas finales de la aventura, presentada en fases con diálogo animado.
+ *
+ * Recorre ocho fases que revelan progresivamente: resultado, capturas, top Pokémon usados,
+ * combates más mortales, rivales más letales, distribución de tipos y consultas a la IA.
+ * La última fase muestra un botón para exportar el resumen como PDF mediante [generarPDF].
+ * Los datos se calculan en [PantallaEstadisticasViewModel].
+ */
 @Composable
 fun PantallaEstadisticas(
     viewModel: PantallaEstadisticasViewModel = viewModel(),
@@ -158,6 +166,7 @@ fun PantallaEstadisticas(
     }
 }
 
+/** Devuelve el texto del cuadro de diálogo de la Prof. Encina para la [fase] y [dialogo] actuales, personalizando el mensaje según [datos]. */
 private fun textoDialogo(fase: Int, dialogo: Int, datos: EstadisticasData?): String {
     if (datos == null) return "Cargando datos de tu aventura..."
     return when (fase) {
@@ -209,6 +218,7 @@ private fun textoDialogo(fase: Int, dialogo: Int, datos: EstadisticasData?): Str
     }
 }
 
+/** Muestra el resultado final (VICTORIA / DERROTA) y el contador de vidas restantes con círculos de color. */
 @Composable
 private fun SeccionResultado(datos: EstadisticasData) {
     val color = if (datos.esVictoria) ColorOro else ColorRojo
@@ -272,6 +282,7 @@ private fun SeccionResultado(datos: EstadisticasData) {
     }
 }
 
+/** Muestra las estadísticas de encuentros en ruta: capturas y pérdidas con barras de porcentaje. */
 @Composable
 private fun SeccionCapturas(datos: EstadisticasData) {
     val pctCap = if (datos.totalRutas > 0) datos.capturadas * 100f / datos.totalRutas else 0f
@@ -312,6 +323,7 @@ private fun SeccionCapturas(datos: EstadisticasData) {
     }
 }
 
+/** Barra de progreso horizontal con [label], valor absoluto [valor]/[total] y porcentaje, coloreada con [color]. */
 @Composable
 private fun BarraPorcentaje(label: String, valor: Int, total: Int, porcentaje: Float, color: Color) {
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -341,6 +353,7 @@ private fun BarraPorcentaje(label: String, valor: Int, total: Int, porcentaje: F
 }
 
 
+/** Muestra el podio de los 3 Pokémon más usados en combates importantes; el primero ocupa el centro ampliado. */
 @Composable
 private fun SeccionTopUsados(datos: EstadisticasData) {
     val lista = datos.topUsados
@@ -387,6 +400,7 @@ private fun SeccionTopUsados(datos: EstadisticasData) {
     }
 }
 
+/** Tarjeta de un Pokémon del ranking de más usados; el primero muestra sprite grande en horizontal, el resto en vertical pequeño. */
 @Composable
 private fun TarjetaUsado(entrada: EntradaUsado, rang: Int, modifier: Modifier = Modifier) {
     val borderColor = when (rang) { 1 -> ColorOro; 2 -> ColorPlata; else -> ColorBronce }
@@ -433,6 +447,7 @@ private fun TarjetaUsado(entrada: EntradaUsado, rang: Int, modifier: Modifier = 
 
 
 
+/** Muestra el podio de los 3 combates en los que más Pokémon del jugador cayeron. */
 @Composable
 private fun SeccionTopMortales(datos: EstadisticasData) {
     val lista = datos.topCombatesMortales
@@ -475,6 +490,7 @@ private fun SeccionTopMortales(datos: EstadisticasData) {
     }
 }
 
+/** Tarjeta de un combate del ranking de más mortales con imagen del entrenador, nombre, lugar y número de Pokémon caídos. */
 @Composable
 private fun TarjetaMortal(
     entrada: EntradaMortal,
@@ -542,6 +558,7 @@ private fun TarjetaMortal(
     }
 }
 
+/** Imagen circular del entrenador rival de [entrada] con borde del color de su medalla. */
 @Composable
 private fun ImagenEntrenador(
     entrada: EntradaMortal,
@@ -560,6 +577,7 @@ private fun ImagenEntrenador(
 
 
 
+/** Muestra el podio de los 3 Pokémon rivales que más aliados del jugador eliminaron. */
 @Composable
 private fun SeccionTopAsesinos(datos: EstadisticasData) {
     val lista = datos.topAsesinos
@@ -602,6 +620,7 @@ private fun SeccionTopAsesinos(datos: EstadisticasData) {
     }
 }
 
+/** Tarjeta de un Pokémon del ranking de más letales con sprite, número de víctimas y ataques usados. */
 @Composable
 private fun TarjetaAsesino(entrada: EntradaAsesino, rang: Int, modifier: Modifier = Modifier) {
     val borderColor = when (rang) { 1 -> ColorOro; 2 -> ColorPlata; else -> ColorBronce }
@@ -664,6 +683,7 @@ private fun TarjetaAsesino(entrada: EntradaAsesino, rang: Int, modifier: Modifie
 }
 
 
+/** Muestra la distribución de tipos del equipo completo con gráfico circular y leyenda lateral. */
 @Composable
 private fun SeccionTipos(datos: EstadisticasData) {
 
@@ -699,6 +719,7 @@ private fun SeccionTipos(datos: EstadisticasData) {
     }
 }
 
+/** Gráfico circular de sectores (Canvas) que representa la distribución de tipos de [dist]. */
 @Composable
 private fun RuedaTipos(
     dist: Map<TipoPokemon, Int>,
@@ -736,6 +757,7 @@ private fun RuedaTipos(
     }
 }
 
+/** Leyenda de dos columnas que lista cada tipo con su punto de color y porcentaje sobre el [total]. */
 @Composable
 private fun LeyendaTipos(
     dist: Map<TipoPokemon, Int>,
@@ -796,6 +818,7 @@ private fun LeyendaTipos(
     }
 }
 
+/** Muestra el total de consultas realizadas a NuzBot IA con un indicador circular destacado. */
 @Composable
 private fun SeccionConsultasIA(datos: EstadisticasData) {
     Column(
@@ -846,6 +869,7 @@ private fun SeccionConsultasIA(datos: EstadisticasData) {
 }
 
 
+/** Resumen completo con todas las secciones de estadísticas en una LazyColumn y botón para descargar el PDF. */
 @Composable
 private fun ResumenCompleto(
     datos: EstadisticasData,
@@ -966,6 +990,7 @@ private fun ResumenCompleto(
 }
 
 
+/** Placeholder con [mensaje] que se muestra cuando una sección de ranking no tiene datos. */
 @Composable
 private fun TextoVacio(mensaje: String) {
     Box(

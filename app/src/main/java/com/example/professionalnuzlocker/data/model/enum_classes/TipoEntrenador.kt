@@ -1,5 +1,6 @@
 package com.example.professionalnuzlocker.data.model.enum_classes
 
+/** Tipo de entrenador que puede causar la muerte de un Pokémon en el Nuzlocke, con el nombre que se muestra en pantalla. */
 enum class TipoEntrenador(val displayName: String) {
     RIVAL("Rival"),
     LIDER_GIMNASIO("Líder de Gimnasio"),

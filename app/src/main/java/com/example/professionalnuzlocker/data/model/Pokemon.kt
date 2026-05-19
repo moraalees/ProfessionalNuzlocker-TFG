@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import com.example.professionalnuzlocker.data.model.enum_classes.MetodoEvolutivo
 import com.example.professionalnuzlocker.data.model.enum_classes.TipoPokemon
 
+/** Especie Pokémon de la Pokédex con su información estática: tipos, habilidades posibles, línea evolutiva, rutas donde aparece y método de evolución. */
 data class Pokemon(
     val idPokedex: Int = 0,
     val nombre: String = "",

@@ -12,15 +12,27 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
+/**
+ * Implementación de [PartidaRepository] sobre Firestore.
+ *
+ * Las partidas se almacenan en `partidas/{uid}/partidas`. Cada operación envuelve
+ * las callbacks de Firestore en corrutinas usando [suspendCancellableCoroutine].
+ *
+ * Principales operaciones: guardar/cargar/borrar partida, actualizar encuentros y equipo
+ * tras registrar un encuentro, actualizar combates tras pelear, marcar fin de Nuzlocke
+ * e incrementar el contador de consultas a la IA.
+ */
 class FirestorePartidaRepository: PartidaRepository {
     private val baseDatos = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
 
+    /** Referencia a la subcolección de partidas del usuario autenticado actualmente. */
     private fun userCol() = baseDatos
         .collection("partidas")
         .document(auth.currentUser!!.uid)
         .collection("partidas")
 
+    /** Crea un documento nuevo para la partida en Firestore y devuelve el ID generado. Añade el timestamp de creación automáticamente. */
     override suspend fun guardarPartida(partida: Partida): Result<String> {
         return try {
             val partidaAGuardar = partida.copy(createdAt = Timestamp.now())
@@ -41,6 +53,7 @@ class FirestorePartidaRepository: PartidaRepository {
         }
     }
 
+    /** Comprueba si el usuario ya tiene al menos una partida guardada consultando solo el primer documento. */
     override suspend fun existePartida(): Result<Boolean> {
         return try {
             suspendCancellableCoroutine { cont ->
@@ -61,6 +74,7 @@ class FirestorePartidaRepository: PartidaRepository {
         }
     }
 
+    /** Elimina en batch todas las partidas del usuario. */
     override suspend fun borrarPartidas(): Result<Unit> {
         return try {
             suspendCancellableCoroutine { cont ->
@@ -92,6 +106,7 @@ class FirestorePartidaRepository: PartidaRepository {
         }
     }
 
+    /** Carga la primera partida encontrada y la deserializa asegurando que todas las listas sean mutables. */
     override suspend fun cargarPartida(): Result<Pair<String, Partida>> {
         return try {
             suspendCancellableCoroutine { cont ->
@@ -130,6 +145,7 @@ class FirestorePartidaRepository: PartidaRepository {
         }
     }
 
+    /** Actualiza en Firestore los encuentros de rutas, el estado del equipo/PC/muertos y las vidas restantes de una partida. */
     override suspend fun actualizarEncuentrosYEquipo(
         docId: String,
         encuentros: List<EncuentroRuta>,
@@ -160,6 +176,7 @@ class FirestorePartidaRepository: PartidaRepository {
         }
     }
 
+    /** Actualiza en Firestore los resultados de combates, el equipo, los muertos y las vidas tras enfrentarse a un combate importante. */
     override suspend fun actualizarResultadosCombates(
         docId: String,
         resultados: List<ResultadoCombate>,
@@ -188,6 +205,7 @@ class FirestorePartidaRepository: PartidaRepository {
         }
     }
 
+    /** Marca la partida como finalizada poniendo finDeLocke a true. */
     override suspend fun marcarFinDeLocke(docId: String): Result<Unit> {
         return try {
             suspendCancellableCoroutine { cont ->
@@ -202,6 +220,7 @@ class FirestorePartidaRepository: PartidaRepository {
         }
     }
 
+    /** Incrementa en 1 el contador de consultas a la IA usando un FieldValue atómico para evitar condiciones de carrera. */
     override suspend fun incrementarConsultasIA(docId: String): Result<Unit> {
         return try {
             suspendCancellableCoroutine { cont ->

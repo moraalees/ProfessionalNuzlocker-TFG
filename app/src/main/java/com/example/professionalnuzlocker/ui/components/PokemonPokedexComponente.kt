@@ -44,6 +44,18 @@ import com.example.professionalnuzlocker.ui.theme.ColorRojoVibrante
 import com.example.professionalnuzlocker.ui.utils.AudioManager
 import com.example.professionalnuzlocker.ui.utils.GameSound
 
+/**
+ * Tarjeta de Pokémon para la Pokédex que muestra su sprite y nombre.
+ *
+ * Al pulsarla abre un diálogo con información completa: ID, tipos (con su color),
+ * habilidades, línea evolutiva con métodos y rutas de captura. Las rutas son
+ * pulsables para ver un mapa de imagen en un segundo diálogo; si hay más de dos
+ * aparece un enlace "+N más..." que abre la lista completa.
+ *
+ * @param pokemon Pokémon a mostrar.
+ * @param pokedex Lista completa de Pokémon para resolver la línea evolutiva.
+ * @param audioManager Gestor de audio opcional para reproducir sonido al pulsar.
+ */
 @Composable
 fun PokemonPokedexComponente(
     pokemon: Pokemon,

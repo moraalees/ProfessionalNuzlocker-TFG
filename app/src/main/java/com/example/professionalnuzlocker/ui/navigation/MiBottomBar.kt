@@ -19,6 +19,15 @@ import com.example.professionalnuzlocker.ui.theme.ColorClaro
 import com.example.professionalnuzlocker.ui.theme.ColorOscuro
 import com.example.professionalnuzlocker.ui.theme.ColorRojo
 
+/**
+ * Barra de navegación inferior con 4 destinos principales: Registro, Pokédex, Pokémon e IA.
+ *
+ * Fondo [ColorRojo]; icono seleccionado en [ColorOscuro] e icono normal en [ColorClaro].
+ * Cada ítem navega con `launchSingleTop = true` haciendo popUpTo [RutasNavegacion.HOME]
+ * para evitar apilar duplicados en el back stack.
+ *
+ * @param navController Controlador de navegación para cambiar de destino.
+ */
 @Composable
 fun MiBottomBar(navController: NavController) {
     val rutaActual = navController.currentBackStackEntryAsState().value?.destination?.route

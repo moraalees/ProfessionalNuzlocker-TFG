@@ -8,6 +8,14 @@ import androidx.lifecycle.viewModelScope
 import com.example.professionalnuzlocker.data.remote.FirestorePartidaRepository
 import kotlinx.coroutines.launch
 
+/**
+ * ViewModel de [PantallaInicio] que comprueba si existe una partida guardada en Firestore
+ * y permite borrarla antes de empezar una nueva.
+ *
+ * Estados: [hayPartida] (`null` mientras no se ha consultado, `true`/`false` tras
+ * [comprobarPartida]) y [cargando] (activo durante la consulta).
+ * Funciones principales: [comprobarPartida], [borrarPartidas], [limpiarEstado].
+ */
 class PantallaInicioViewModel : ViewModel() {
 
     private val repository = FirestorePartidaRepository()
@@ -18,6 +26,7 @@ class PantallaInicioViewModel : ViewModel() {
     var cargando by mutableStateOf(false)
         private set
 
+    /** Consulta Firestore para determinar si existe una partida activa y actualiza [hayPartida]. */
     fun comprobarPartida() {
         viewModelScope.launch {
             cargando = true

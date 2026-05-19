@@ -86,6 +86,15 @@ import androidx.compose.ui.graphics.ColorMatrix
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+/**
+ * Pantalla de información detallada de la partida con tres pestañas: Equipo, PC y Cementerio.
+ *
+ * La pestaña Equipo muestra la tarjeta del jugador y las tarjetas de cada Pokémon activo con
+ * diálogos de edición (mote, nivel, habilidad) y de evolución. La pestaña PC permite ver el
+ * depósito y mover Pokémon al equipo o intercambiarlos. La pestaña Cementerio lista los caídos
+ * con su causa de muerte. Todos los cambios se persisten en Firestore a través de
+ * [PantallaDatosJuegoViewModel].
+ */
 @Composable
 fun PantallaDatosJuego(audioManager: AudioManager? = null) {
     val viewModel: PantallaDatosJuegoViewModel = viewModel()
@@ -216,6 +225,7 @@ fun PantallaDatosJuego(audioManager: AudioManager? = null) {
     }
 }
 
+/** Fila de pestañas para navegar entre Equipo, PC y Cementerio; resalta la pestaña activa con fondo rojo vibrante. */
 @Composable
 private fun TabSelector(tabs: List<String>, seleccionado: Int, onSeleccionar: (Int) -> Unit) {
     Row(
@@ -253,6 +263,7 @@ private fun TabSelector(tabs: List<String>, seleccionado: Int, onSeleccionar: (I
     }
 }
 
+/** Contenido de la pestaña Equipo: tarjeta del jugador seguida de las tarjetas de cada Pokémon activo, con opción de pulsar para ver el detalle. */
 @Composable
 private fun EquipoContent(
     partida: Partida,
@@ -304,6 +315,7 @@ private fun EquipoContent(
     }
 }
 
+/** Tarjeta con el avatar del jugador, nombre, versión del juego y Pokémon inicial de la [partida]. */
 @Composable
 private fun TarjetaJugador(partida: Partida) {
     val imagenJugador = when (partida.sexoJugador?.lowercase()) {
@@ -355,6 +367,7 @@ private fun TarjetaJugador(partida: Partida) {
     }
 }
 
+/** Tarjeta de un Pokémon del equipo activo: muestra sprite, mote, especie, nivel, tipos y habilidad. Pulsable para abrir el diálogo de detalle. */
 @Composable
 private fun TarjetaPokemonEquipo(
     cap: PokemonCapturado,
@@ -425,8 +438,8 @@ private fun TarjetaPokemonEquipo(
                         fontSize = 12.sp
                     )
                     Spacer(Modifier.weight(1f))
-                    TipoBadgeSmall(tipo1)
-                    tipo2?.let { TipoBadgeSmall(it) }
+                    TipoBadgePequeno(tipo1)
+                    tipo2?.let { TipoBadgePequeno(it) }
                 }
             }
 
@@ -439,6 +452,7 @@ private fun TarjetaPokemonEquipo(
     }
 }
 
+/** Contenido de la pestaña Cementerio: lista de todos los Pokémon caídos con fondo oscuro especial; muestra mensaje vacío si no hay bajas. */
 @Composable
 private fun CementerioContent(
     muertos: List<PokemonCapturado>,
@@ -479,6 +493,7 @@ private fun CementerioContent(
     }
 }
 
+/** Tarjeta de un Pokémon caído: sprite en escala de grises, nombre, nivel, ruta, y causa de muerte (entrenador, Pokémon asesino y ataque). */
 @Composable
 private fun TarjetaMuerto(
     cap: PokemonCapturado,
@@ -589,6 +604,7 @@ private fun TarjetaMuerto(
     }
 }
 
+/** Contenido de la pestaña PC: cuadrícula filtrable por nombre y tipo con los Pokémon depositados; pulsable para ver el detalle. */
 @Composable
 private fun PokemonEnPC(
     partida: Partida,
@@ -739,6 +755,7 @@ private fun PokemonEnPC(
     }
 }
 
+/** Tarjeta compacta de un Pokémon del PC: sprite, mote, especie, nivel y tipos, con borde del color del tipo principal. */
 @Composable
 private fun TarjetaPokemonPC(
     cap: PokemonCapturado,
@@ -796,13 +813,14 @@ private fun TarjetaPokemonPC(
             }
             Spacer(Modifier.height(5.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                TipoBadgeSmall(tipo1)
-                tipo2?.let { TipoBadgeSmall(it) }
+                TipoBadgePequeno(tipo1)
+                tipo2?.let { TipoBadgePequeno(it) }
             }
         }
     }
 }
 
+/** Diálogo de detalle de un Pokémon del PC: muestra especie, mote, nivel, tipos, habilidad y ruta; permite añadirlo al equipo o intercambiarlo con un miembro activo. */
 @Composable
 private fun DialogDetallePCPokemon(
     capturado: PokemonCapturado,
@@ -973,6 +991,7 @@ private fun DialogDetallePCPokemon(
     }
 }
 
+/** Diálogo para elegir qué miembro del equipo sustituir por [pokemonPC]: muestra la lista del equipo activo y confirma el intercambio. */
 @Composable
 private fun DialogSustituirEquipo(
     equipo: List<PokemonCapturado>,
@@ -1083,6 +1102,7 @@ private fun DialogSustituirEquipo(
     }
 }
 
+/** Diálogo completo de edición de un Pokémon del equipo: permite modificar mote, nivel y habilidad, ver la ruta de captura y lanzar el diálogo de evolución. */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun DialogDetallePokemon(
@@ -1417,6 +1437,7 @@ private fun DialogDetallePokemon(
     }
 }
 
+/** Diálogo de evolución: muestra la cadena evolutiva con [EvoSlot], permite confirmar el cambio de especie e introducir la nueva habilidad y nivel. */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun DialogEvolucion(
@@ -1597,6 +1618,7 @@ private fun DialogEvolucion(
     }
 }
 
+/** Slot de una etapa evolutiva: sprite y nombre del Pokémon; el [esActual] aplica un fondo más destacado. */
 @Composable
 private fun EvoSlot(pok: Pokemon, esActual: Boolean) {
     val circuloBrush = tipoBrush(pok.tipo1, pok.tipo2, alpha = if (esActual) 0.45f else 0.12f)
@@ -1633,6 +1655,7 @@ private fun EvoSlot(pok: Pokemon, esActual: Boolean) {
     }
 }
 
+/** Diálogo que muestra la imagen de la [ruta] a pantalla completa con su nombre. */
 @Composable
 private fun DialogImagenRutaGrande(ruta: Rutas, onDismiss: () -> Unit) {
     Dialog(onDismissRequest = onDismiss) {
@@ -1668,6 +1691,7 @@ private fun DialogImagenRutaGrande(ruta: Rutas, onDismiss: () -> Unit) {
     }
 }
 
+/** Campo de texto estilizado con los colores de la app; admite [keyboardType] personalizado y estado de error. */
 @Composable
 private fun CampoTexto(
     value: String,
@@ -1702,6 +1726,7 @@ private fun CampoTexto(
     )
 }
 
+/** Texto de etiqueta de sección en mayúsculas, tamaño pequeño y baja opacidad. */
 @Composable
 private fun SeccionLabel(texto: String) {
     Text(
@@ -1713,6 +1738,7 @@ private fun SeccionLabel(texto: String) {
     )
 }
 
+/** Píldora de color para mostrar el tipo de un Pokémon; el color del texto se adapta según la luminosidad del fondo. */
 @Composable
 private fun TipoBadge(tipo: TipoPokemon) {
     val textColor = if (tipo.color.luminance() > 0.35f) Color(0xFF111111) else ColorClaro
@@ -1730,8 +1756,9 @@ private fun TipoBadge(tipo: TipoPokemon) {
     }
 }
 
+/** Versión reducida de [TipoBadge] para espacios compactos (tarjetas del PC). */
 @Composable
-private fun TipoBadgeSmall(tipo: TipoPokemon) {
+private fun TipoBadgePequeno(tipo: TipoPokemon) {
     val textColor = if (tipo.color.luminance() > 0.35f) Color(0xFF111111) else ColorClaro
     Box(
         modifier = Modifier
@@ -1747,6 +1774,7 @@ private fun TipoBadgeSmall(tipo: TipoPokemon) {
     }
 }
 
+/** Devuelve un [Brush] vertical con los colores de [tipo1] y [tipo2] (o monocromo si no hay segundo tipo) al [alpha] indicado. */
 private fun tipoBrush(tipo1: TipoPokemon, tipo2: TipoPokemon?, alpha: Float): Brush =
     if (tipo2 != null) {
         Brush.verticalGradient(
@@ -1763,11 +1791,13 @@ private fun tipoBrush(tipo1: TipoPokemon, tipo2: TipoPokemon?, alpha: Float): Br
         )
     }
 
+/** Formatea un [timestamp] de Firestore a la cadena `dd/MM/yyyy · HH:mm`. */
 private fun formatearFecha(timestamp: com.google.firebase.Timestamp): String {
     val sdf = SimpleDateFormat("dd/MM/yyyy · HH:mm", Locale.getDefault())
     return sdf.format(timestamp.toDate())
 }
 
+/** Convierte el mapa [metodo] de [MetodoEvolutivo] a una cadena legible (p.ej. "Nv. 36", "Piedra Agua", "Intercambio"). */
 private fun formatearMetodoEvolutivo(metodo: Map<MetodoEvolutivo, String>): String {
     if (metodo.isEmpty()) return ""
     val (tipo, valor) = metodo.entries.first()

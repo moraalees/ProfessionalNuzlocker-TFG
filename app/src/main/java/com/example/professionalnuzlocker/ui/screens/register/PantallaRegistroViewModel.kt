@@ -25,12 +25,26 @@ import com.google.firebase.Timestamp
 import kotlinx.coroutines.launch
 import java.util.UUID
 
+/** Razón por la que ha terminado el Nuzlocke, usada para mostrar la pantalla final correspondiente. */
 sealed class MotivoFin {
+    /** El contador de vidas llegó a un valor negativo. */
     object SinVidas : MotivoFin()
+    /** El jugador perdió un combate importante (resultado `ganada = false`). */
     object CombatePerdido : MotivoFin()
+    /** El jugador derrotó al campeón (combate con id 30). */
     object Victoria : MotivoFin()
 }
 
+/**
+ * ViewModel de [PantallaRegistro] que mantiene el estado completo de la sesión de registro
+ * en curso: mapa de [estados] por ruta, [equipoActual], lista combinada [listaItems]
+ * (rutas + combates intercalados), [resultadosCombates] y contador de [vidas].
+ *
+ * Al crearse, carga la partida desde Firestore ([cargarDesdeFirestore]). Las operaciones
+ * principales son [seleccionarPokemon], [confirmarCaptura], [confirmarDebilitado],
+ * [registrarBatalla] y [matarPokemon]. Todas persisten los cambios en Firestore y actualizan
+ * [motivoFinDeJuego] si el Nuzlocke termina ([MotivoFin]).
+ */
 class PantallaRegistroViewModel : ViewModel() {
 
     private val repository = FirestorePartidaRepository()

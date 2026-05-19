@@ -8,6 +8,15 @@ import android.os.Handler
 import android.os.Looper
 import com.example.professionalnuzlocker.R
 
+/**
+ * Gestiona toda la reproducción de audio de la app: música de fondo en bucle, música de batalla
+ * y efectos de sonido a corto plazo ([GameSound]).
+ *
+ * La música de fondo y la de batalla se encadenan con un fundido cruzado de 1 s mediante
+ * [crossfadeToBattle] y [crossfadeToAmbient]. El usuario puede silenciar la música con
+ * [toggleAmbientMusic] sin afectar a los efectos de sonido. El ciclo de vida de la app
+ * debe llamar a [startAmbientMusic] en `onResume` y [pauseAmbientMusic] en `onPause`/`onStop`.
+ */
 class AudioManager(private val context: Context) {
     private var isUserPaused = false
     private var isAppInBackground = false
@@ -40,6 +49,7 @@ class AudioManager(private val context: Context) {
         soundMap[GameSound.CAPTURE] = soundPool.load(context, R.raw.captura, 1)
     }
 
+    /** Reproduce el efecto de sonido [sound]. Si es [GameSound.CAPTURE], reduce el volumen de la música de fondo 2,5 s. */
     fun playSound(sound: GameSound) {
         val id = soundMap[sound] ?: return
         soundPool.play(id, 1f, 1f, 1, 0, 1f)
@@ -57,6 +67,7 @@ class AudioManager(private val context: Context) {
         }, 2500)
     }
 
+    /** Inicia o reanuda la música de fondo; llamar desde `onResume`. No hace nada si el usuario la ha pausado. */
     fun startAmbientMusic() {
         isAppInBackground = false
         if (bgPlayer == null) {
@@ -68,16 +79,19 @@ class AudioManager(private val context: Context) {
         }
     }
 
+    /** Pausa la música de fondo por cambio de ciclo de vida (app en segundo plano); llamar desde `onPause`/`onStop`. */
     fun pauseAmbientMusic() {
         isAppInBackground = true
         bgPlayer?.pause()
     }
 
+    /** Reanuda la música de fondo si la app vuelve al primer plano y el usuario no la había silenciado. */
     fun resumeAmbientMusic() {
         isAppInBackground = false
         if (!isUserPaused) bgPlayer?.start()
     }
 
+    /** Alterna el estado de pausa del usuario: pausa la música si estaba sonando y la reanuda si estaba pausada. */
     fun toggleAmbientMusic() {
         if (bgPlayer == null) return
         isUserPaused = !isUserPaused
@@ -89,6 +103,7 @@ class AudioManager(private val context: Context) {
     }
     fun isMusicPaused() = isUserPaused
 
+    /** Realiza un fundido cruzado de la música de fondo a la música de batalla; al terminar la batalla llama [crossfadeToAmbient] automáticamente. */
     fun crossfadeToBattle() {
         if (isUserPaused) return
         val token = ++fadeToken
@@ -111,6 +126,7 @@ class AudioManager(private val context: Context) {
         }
     }
 
+    /** Realiza un fundido cruzado de la música de batalla de vuelta a la música de fondo. */
     fun crossfadeToAmbient() {
         val token = ++fadeToken
         if (!isUserPaused && !isAppInBackground) {

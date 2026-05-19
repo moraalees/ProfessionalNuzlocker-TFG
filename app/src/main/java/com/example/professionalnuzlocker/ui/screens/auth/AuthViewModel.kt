@@ -10,6 +10,15 @@ import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuthException
 import kotlinx.coroutines.launch
 
+/**
+ * ViewModel compartido por [PantallaLogin] y [PantallaRegistroAuth] que gestiona la autenticación
+ * de Firebase a través de [FirebaseAuthRepository].
+ *
+ * Expone dos estados observables: [cargando] (indica operación en curso) y [error] (mensaje
+ * legible si la última operación falló). Las funciones principales son [login], [registrar]
+ * y [limpiarError]. Los errores de Firebase se traducen a mensajes en español mediante
+ * [mensajeError].
+ */
 class AuthViewModel : ViewModel() {
     private val repository = FirebaseAuthRepository()
 
@@ -18,6 +27,7 @@ class AuthViewModel : ViewModel() {
     var error by mutableStateOf<String?>(null)
         private set
 
+    /** Inicia sesión con [email] y [password]; llama [onExito] si tiene éxito o escribe [error]. */
     fun login(email: String, password: String, onExito: () -> Unit) {
         viewModelScope.launch {
             cargando = true

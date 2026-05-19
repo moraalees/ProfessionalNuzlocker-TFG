@@ -2,6 +2,7 @@ package com.example.professionalnuzlocker.data.model.enum_classes
 
 import com.example.professionalnuzlocker.R
 
+/** Todas las rutas y localidades de Pokémon Negro/Blanco donde el jugador puede tener un encuentro Nuzlocke, con su nombre para mostrar y el drawable asociado. */
 enum class Rutas(val nombreRuta: String, val imagen: Int) {
     PUEBLO_ARCILLA("Pueblo Arcilla", R.drawable.pueblo_arcilla),
     RUTA_1("Ruta 1", R.drawable.ruta1),

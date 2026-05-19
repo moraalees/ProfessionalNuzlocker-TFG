@@ -52,6 +52,12 @@ import com.example.professionalnuzlocker.ui.theme.ColorOscuro
 import com.example.professionalnuzlocker.ui.theme.ColorRojo
 import com.example.professionalnuzlocker.ui.theme.ColorRojoVibrante
 
+/**
+ * Pantalla del asistente IA NuzBot con historial de mensajes en burbujas y campo de entrada.
+ *
+ * Se desplaza automáticamente al último mensaje. Mientras el bot procesa la respuesta muestra
+ * el indicador [NuzBotPensando]. Los mensajes se gestionan en [PantallaChatViewModel].
+ */
 @Composable
 fun PantallaChat() {
     val viewModel: PantallaChatViewModel = viewModel()
@@ -209,6 +215,7 @@ fun PantallaChat() {
     }
 }
 
+/** Burbuja de mensaje del usuario, alineada a la derecha con fondo rojo vibrante. */
 @Composable
 private fun BurbujaMensajeUsuario(texto: String) {
     Row(
@@ -230,6 +237,7 @@ private fun BurbujaMensajeUsuario(texto: String) {
     }
 }
 
+/** Burbuja de respuesta de NuzBot, alineada a la izquierda con avatar circular "N". */
 @Composable
 private fun BurbujaMensajeBot(texto: String) {
     Row(
@@ -268,6 +276,7 @@ private fun BurbujaMensajeBot(texto: String) {
     }
 }
 
+/** Indicador de espera que se muestra mientras NuzBot está generando la respuesta. */
 @Composable
 private fun NuzBotPensando() {
     Row(

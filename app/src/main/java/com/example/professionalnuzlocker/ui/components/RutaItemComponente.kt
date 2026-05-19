@@ -63,6 +63,27 @@ import com.example.professionalnuzlocker.ui.theme.ColorSnivy
 import com.example.professionalnuzlocker.ui.utils.AudioManager
 import com.example.professionalnuzlocker.ui.utils.GameSound
 
+/**
+ * Ítem expandible que representa una ruta del Nuzlocke y su estado de encuentro.
+ *
+ * El borde cambia de color según el [EstadoRutaRegistro]: libre → rojo, Pokémon elegido →
+ * rojo vibrante, capturado → verde (Snivy) con candado, debilitado → rojo atenuado con candado.
+ * Las rutas ya resueltas se colapsan automáticamente.
+ *
+ * Contenido del panel expandido:
+ * - [EstadoRutaRegistro.RutaLibre] → cuadrícula de Pokémon disponibles para elegir.
+ * - [EstadoRutaRegistro.PokemonElegido] → formulario para confirmar captura o debilitado.
+ * - [EstadoRutaRegistro.PokemonCapturado] / [EstadoRutaRegistro.PokemonDebilitado] → info de solo lectura.
+ *
+ * @param ruta Ruta del juego a representar.
+ * @param estado Estado actual del encuentro en esta ruta.
+ * @param esActiva Si es false, la ruta es solo lectura (hay otra ruta activa sin completar).
+ * @param onSeleccionarPokemon Callback al elegir un Pokémon de la lista disponible.
+ * @param onConfirmarCaptura Callback al confirmar captura: recibe mote y nivel como cadenas.
+ * @param onConfirmarDebilitado Callback al confirmar que el Pokémon encontrado fue debilitado.
+ * @param onRutaBloqueadaClick Callback al intentar interactuar con una ruta inactiva.
+ * @param audioManager Gestor de audio opcional.
+ */
 @Composable
 fun RutaItemComponente(
     ruta: Rutas,
@@ -192,6 +213,7 @@ fun RutaItemComponente(
     }
 }
 
+/** Fila horizontal scrollable con los Pokémon capturables en la ruta; muestra aviso si la ruta no está activa. */
 @Composable
 private fun PokemonsDisponibles(
     ruta: Rutas,
@@ -247,6 +269,7 @@ private fun PokemonsDisponibles(
     }
 }
 
+/** Ítem visual de un Pokémon seleccionable; aparece atenuado si la ruta no está activa. */
 @Composable
 private fun PokemonSeleccionableItem(pokemon: Pokemon, esActiva: Boolean, onClick: () -> Unit) {
     Column(
@@ -275,6 +298,7 @@ private fun PokemonSeleccionableItem(pokemon: Pokemon, esActiva: Boolean, onClic
     }
 }
 
+/** Formulario de resultado del encuentro: chips capturado/debilitado y campos de mote y nivel si se captura. */
 @Composable
 private fun SelectorSituacion(
     pokemon: Pokemon,
@@ -406,6 +430,7 @@ private fun SelectorSituacion(
     }
 }
 
+/** Chip de selección binaria con relleno de color cuando está activo y borde cuando no. */
 @Composable
 private fun ChipSituacion(texto: String, seleccionado: Boolean, color: Color, onClick: () -> Unit) {
     Box(
@@ -424,6 +449,7 @@ private fun ChipSituacion(texto: String, seleccionado: Boolean, color: Color, on
     }
 }
 
+/** Panel de solo lectura con el sprite, mote y nivel del Pokémon capturado en esta ruta. */
 @Composable
 private fun InfoCapturado(estado: EstadoRutaRegistro.PokemonCapturado) {
     Row(
@@ -454,6 +480,7 @@ private fun InfoCapturado(estado: EstadoRutaRegistro.PokemonCapturado) {
     }
 }
 
+/** Panel de solo lectura con el sprite en escala de grises del Pokémon que fue debilitado en esta ruta. */
 @Composable
 private fun InfoDebilitado(estado: EstadoRutaRegistro.PokemonDebilitado) {
     Row(

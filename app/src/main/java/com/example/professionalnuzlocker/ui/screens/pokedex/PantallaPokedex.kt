@@ -50,6 +50,11 @@ import com.example.professionalnuzlocker.ui.theme.ColorOscuro
 import com.example.professionalnuzlocker.ui.theme.ColorRojo
 import com.example.professionalnuzlocker.ui.theme.ColorRojoVibrante
 
+/**
+ * Pantalla de Pokédex con cuadrícula de dos columnas y barra de búsqueda por nombre.
+ * Filtra en tiempo real la lista completa de [Pokedex] según el texto introducido y muestra
+ * cada Pokémon mediante [PokemonPokedexComponente].
+ */
 @Composable
 fun PantallaPokedex(audioManager: AudioManager? = null) {
     val fondoDesvanecido = Brush.verticalGradient(

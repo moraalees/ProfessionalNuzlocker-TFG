@@ -16,10 +16,14 @@ import com.example.professionalnuzlocker.data.repository.CombateRepository
 import com.example.professionalnuzlocker.data.repository.Pokedex
 import kotlinx.coroutines.launch
 
+/** Entrada del ranking de Pokémon más usados: el capturado, su especie de la Pokédex y el número de combates en los que participó. */
 data class EntradaUsado(val pokemon: PokemonCapturado, val especie: Pokemon, val veces: Int)
+/** Entrada del ranking de combates más mortales: el combate y el número de Pokémon del jugador que murieron en él. */
 data class EntradaMortal(val combate: CombateImportante, val muertes: Int)
+/** Entrada del ranking de rivales más letales: la especie del Pokémon asesino, los ataques que usó y el total de víctimas. */
 data class EntradaAsesino(val especie: Pokemon, val ataques: List<String>, val victimas: Int)
 
+/** Snapshot de todas las estadísticas calculadas de la partida, listo para ser mostrado en [PantallaEstadisticas] y exportado a PDF. */
 data class EstadisticasData(
     val esVictoria: Boolean,
     val vidas: Int,
@@ -33,6 +37,15 @@ data class EstadisticasData(
     val consultasIA: Int
 )
 
+/**
+ * ViewModel de [PantallaEstadisticas] que carga la partida desde Firestore y calcula
+ * el objeto [EstadisticasData] con todos los indicadores de la aventura.
+ *
+ * Expone [datos] (resultado del cálculo, `null` mientras [cargando] es `true`). Los cálculos
+ * incluyen: resultado de victoria, capturas/pérdidas por ruta, top 3 de Pokémon más usados,
+ * top 3 de combates más mortales, top 3 de rivales más letales, distribución de tipos
+ * y total de consultas a la IA.
+ */
 class PantallaEstadisticasViewModel : ViewModel() {
 
     private val repository = FirestorePartidaRepository()

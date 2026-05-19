@@ -10,7 +10,18 @@ import com.example.professionalnuzlocker.data.model.enum_classes.TipoCombate
 import com.example.professionalnuzlocker.data.model.enum_classes.TipoPokemon
 import com.example.professionalnuzlocker.data.model.enum_classes.VersionJuego
 
+/**
+ * Repositorio singleton con los 30 combates importantes del Nuzlocke de Pokémon Negro/Blanco.
+ *
+ * Incluye peleas contra rivales (Bel, Cheren), líderes de gimnasio (Aloe, Camus, Camila…),
+ * el Equipo Plasma (N, Ghechis) y la Liga Pokémon (Alto Mando + Campeón).
+ *
+ * Los equipos rivales se adaptan al Pokémon inicial del jugador y, en los combates 23 y 29,
+ * también a la versión del juego (Negro/Blanco). Llama a [generarListaCombates] para obtener
+ * la lista ordenada de combates.
+ */
 object CombateRepository {
+    /** Regenera y devuelve la lista completa de combates importantes a partir del estado actual de la partida. */
     fun generarListaCombates(estado: Partida): List<CombateImportante> {
         listaCombatesImportantes.clear()
 
@@ -81,6 +92,7 @@ object CombateRepository {
 
     private val listaCombatesImportantes: MutableList<CombateImportante> = mutableListOf()
 
+    /** Combate 1 – Bel en Pueblo Arcilla. Primera pelea del juego; el rival usa el inicial con ventaja de tipo sobre el jugador. */
     private fun configurarCombate1(inicial: String?): CombateImportante {
         return when (inicial) {
             PokemonInicial.SNIVY.nombre -> {
@@ -146,6 +158,7 @@ object CombateRepository {
         }
     }
 
+    /** Combate 2 – Cheren en Pueblo Arcilla. Segunda pelea inmediata al inicio del juego. */
     private fun configurarCombate2(inicial: String?): CombateImportante {
         return when (inicial) {
             PokemonInicial.SNIVY.nombre -> {

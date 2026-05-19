@@ -48,6 +48,11 @@ import com.example.professionalnuzlocker.ui.theme.ColorRojoVibrante
 import com.example.professionalnuzlocker.ui.utils.AudioManager
 import com.example.professionalnuzlocker.ui.utils.GameSound
 
+/**
+ * Pantalla de guía con seis tarjetas expandibles que explican las reglas del Nuzlocke,
+ * condiciones de victoria y derrota, seguimiento del progreso y el asistente IA NuzBot.
+ * Cada tarjeta presenta la información mediante el componente de cuadro de diálogo de la Prof. Encina.
+ */
 @Composable
 fun PantallaGuia(audioManager: AudioManager? = null) {
     val fondoDesvanecido = Brush.verticalGradient(

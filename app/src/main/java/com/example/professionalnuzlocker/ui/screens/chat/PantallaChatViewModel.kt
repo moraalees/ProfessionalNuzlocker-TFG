@@ -13,8 +13,20 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
+/**
+ * ViewModel de [PantallaChat] que gestiona la conversación con NuzBot, el asistente IA.
+ *
+ * Al crearse, carga el ID de la partida activa desde Firestore ([cargandoPartida] / [partidaId]).
+ * El historial de mensajes se almacena en [mensajes] como lista de [Mensaje] (cada uno
+ * con el texto y un flag [Mensaje.esUsuario]). El estado [cargando] indica que se está
+ * esperando la respuesta de la IA y [error] recoge el último error de red.
+ * La función principal es [enviarMensaje], que obtiene el token Firebase mediante
+ * [obtenerTokenFirebase] y llama al endpoint de chat, incrementando también el contador
+ * de consultas IA en Firestore tras cada respuesta exitosa.
+ */
 class PantallaChatViewModel : ViewModel() {
 
+    /** Representa un mensaje en el historial: [texto] del mensaje y [esUsuario] para saber el origen. */
     data class Mensaje(val texto: String, val esUsuario: Boolean)
 
     private val repository = FirestorePartidaRepository()
@@ -39,6 +51,7 @@ class PantallaChatViewModel : ViewModel() {
         }
     }
 
+    /** Envía [texto] a NuzBot, añade las burbujas de usuario y bot al historial y persiste el contador de consultas. */
     fun enviarMensaje(texto: String) {
         val docId = partidaId ?: return
 

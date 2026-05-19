@@ -19,6 +19,13 @@ import com.example.professionalnuzlocker.ui.screens.pokedex.PantallaPokedex
 import com.example.professionalnuzlocker.ui.theme.ProfessionalNuzlockerTheme
 import com.example.professionalnuzlocker.ui.utils.AudioManager
 
+/**
+ * Punto de entrada de la aplicación. Inicializa [AudioManager], habilita el modo edge-to-edge
+ * y lanza [NavegadorPrincipal] como raíz del árbol de composición.
+ *
+ * Gestiona el ciclo de vida de la música de fondo: la reanuda en [onResume] y la pausa
+ * en [onPause] / [onStop] para que el audio no continúe cuando la app pasa a segundo plano.
+ */
 class MainActivity : ComponentActivity() {
 
     private lateinit var audioManager: AudioManager

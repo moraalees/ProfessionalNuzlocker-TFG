@@ -61,6 +61,14 @@ import com.example.professionalnuzlocker.ui.utils.GameSound
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+/**
+ * Pantalla de configuración inicial de la partida Nuzlocke, presentada como diálogo
+ * introductorio con la Prof. Encina.
+ *
+ * El jugador selecciona secuencialmente: versión del juego, sexo, nombre e inicial.
+ * Al confirmar el último paso, guarda la [Partida] en Firestore mediante
+ * [PantallaFormularioViewModel] e invoca [empezarRegistro] para navegar a [PantallaRegistro].
+ */
 @Composable
 fun PantallaFormulario(
     empezarRegistro: () -> Unit,

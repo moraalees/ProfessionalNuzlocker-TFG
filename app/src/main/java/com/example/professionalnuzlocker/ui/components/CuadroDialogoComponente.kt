@@ -20,6 +20,16 @@ import androidx.compose.ui.unit.sp
 import com.example.professionalnuzlocker.ui.theme.ColorClaro
 import com.example.professionalnuzlocker.ui.theme.ColorOscuro
 
+/**
+ * Cuadro de diálogo animado con entrada y salida en fade.
+ *
+ * Muestra [texto] en un recuadro redondeado con borde [ColorOscuro] y fondo [ColorClaro].
+ * Es pulsable para disparar [onClick], útil para avanzar en diálogos narrativos o tutoriales.
+ *
+ * @param texto Contenido a mostrar dentro del cuadro.
+ * @param visible Si es false el cuadro desaparece con fadeOut.
+ * @param onClick Acción a ejecutar al pulsar el cuadro.
+ */
 @Composable
 fun CuadroDialogoComponente(
     texto: String,

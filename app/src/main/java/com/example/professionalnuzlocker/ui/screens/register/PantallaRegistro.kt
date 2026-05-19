@@ -89,6 +89,15 @@ import com.example.professionalnuzlocker.ui.theme.ColorRojoVibrante
 import com.example.professionalnuzlocker.ui.utils.GameSound
 import kotlinx.coroutines.launch
 
+/**
+ * Pantalla principal de registro de la aventura Nuzlocke.
+ *
+ * Muestra una lista combinada de rutas y combates importantes. En cada ruta el jugador
+ * puede seleccionar el Pokémon encontrado, capturarlo (con mote y nivel) o marcarlo como
+ * debilitado. En cada combate puede registrar el resultado y el equipo usado. Cuando un
+ * Pokémon del equipo muere, aparece el diálogo de causa de muerte. Al detectar el fin del
+ * Nuzlocke ([MotivoFin]), navega a [PantallaEstadisticas] via [onIrEstadisticas].
+ */
 @Composable
 fun PantallaRegistro(
     onIrEstadisticas: () -> Unit = {},
@@ -346,6 +355,7 @@ fun PantallaRegistro(
     }
 }
 
+/** Barra superior fija con los seis slots del equipo activo y el contador de vidas (o "FIN DE LOCKE" si ya terminó). */
 @Composable
 private fun EquipoTopBar(
     equipo: List<PokemonCapturado>,
@@ -411,6 +421,7 @@ private fun EquipoTopBar(
     }
 }
 
+/** Slot circular para un miembro del equipo; vacío si no hay Pokémon en esa posición. El fondo usa el gradiente de tipos del Pokémon. */
 @Composable
 private fun SlotEquipo(
     pokemonCapturado: PokemonCapturado?,
@@ -491,6 +502,7 @@ private fun SlotEquipo(
     }
 }
 
+/** Diálogo de detalle de un Pokémon del equipo activo: muestra especie, mote, nivel, tipos, habilidad y ruta de captura; permite enviarlo al PC o marcarlo como caído. */
 @Composable
 private fun DialogDetalleEquipoPokemon(
     capturado: PokemonCapturado,
@@ -640,6 +652,7 @@ private fun DialogDetalleEquipoPokemon(
     }
 }
 
+/** Formulario de registro de muerte: el jugador selecciona el tipo de entrenador, busca el Pokémon asesino y opcionalmente escribe el ataque que mató al Pokémon caído. */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun DialogFormMuerte(
@@ -912,6 +925,7 @@ private fun DialogFormMuerte(
     }
 }
 
+/** Banner con el motivo del fin del Nuzlocke ([MotivoFin]) y botón para navegar a las estadísticas. */
 @Composable
 private fun BotonFinDeLocke(
     motivo: MotivoFin,
@@ -973,6 +987,7 @@ private fun BotonFinDeLocke(
     }
 }
 
+/** Texto de etiqueta de sección en mayúsculas, tamaño pequeño y baja opacidad. */
 @Composable
 private fun SeccionLabel(texto: String) {
     Text(
@@ -984,6 +999,7 @@ private fun SeccionLabel(texto: String) {
     )
 }
 
+/** Píldora de color para mostrar el tipo de un Pokémon. */
 @Composable
 private fun TipoBadge(tipo: TipoPokemon) {
     Box(
@@ -1000,6 +1016,7 @@ private fun TipoBadge(tipo: TipoPokemon) {
     }
 }
 
+/** Devuelve un [Brush] vertical con los colores de [tipo1] y [tipo2] (o monocromo si no hay segundo tipo) al [alpha] indicado. */
 private fun tipoBrush(tipo1: TipoPokemon, tipo2: TipoPokemon?, alpha: Float): Brush =
     if (tipo2 != null) {
         Brush.verticalGradient(

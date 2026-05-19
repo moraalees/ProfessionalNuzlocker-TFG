@@ -81,6 +81,14 @@ import com.example.professionalnuzlocker.ui.theme.ColorTepig
 import com.example.professionalnuzlocker.ui.utils.AudioManager
 import com.example.professionalnuzlocker.ui.utils.GameSound
 
+/**
+ * Pantalla de inicio con carrusel de tres acciones: continuar partida, nueva partida y guía.
+ *
+ * Comprueba la existencia de una partida guardada en Firestore antes de navegar para
+ * mostrar el diálogo de confirmación de sobreescritura si ya existe una. Incluye un
+ * botón de pausa/reanudación de la música y un diálogo de gestión de cuenta
+ * (cambio de contraseña / eliminar cuenta).
+ */
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun PantallaInicio(
@@ -748,6 +756,7 @@ fun PantallaInicio(
     }
 }
 
+/** Módulo siempre positivo, necesario para el cálculo de dirección del carrusel con índices negativos. */
 private fun Int.floorMod(other: Int): Int {
     val r = this % other
     return if (r < 0) r + other else r

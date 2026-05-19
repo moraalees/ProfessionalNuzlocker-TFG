@@ -1,5 +1,6 @@
 package com.example.professionalnuzlocker.data.model
 
+/** Estado de una ruta durante el flujo de registro: libre sin visitar, Pokémon seleccionado pendiente de confirmar, ya capturado con mote y nivel, o debilitado en el intento. */
 sealed class EstadoRutaRegistro {
     object RutaLibre: EstadoRutaRegistro()
 

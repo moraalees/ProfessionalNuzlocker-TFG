@@ -6,6 +6,14 @@ import com.example.professionalnuzlocker.data.model.enum_classes.MetodoEvolutivo
 import com.example.professionalnuzlocker.data.model.enum_classes.Rutas
 import com.example.professionalnuzlocker.data.model.enum_classes.TipoPokemon
 
+/**
+ * Pokédex estática con los 156 Pokémon disponibles en Pokémon Negro/Blanco
+ * (índices 0–155, incluyendo Victini y todos los legendarios).
+ *
+ * Cada [Pokemon] incluye tipos, habilidades posibles, línea evolutiva completa,
+ * rutas de captura y método de evolución. Se accede mediante [getPokemon] para la
+ * lista completa o [getPokemonById] para buscar por ID de Pokédex.
+ */
 object Pokedex {
     private val pokemonPokedex: MutableList<Pokemon> = mutableListOf(
         Pokemon(0, "Victini", TipoPokemon.PSIQUICO, TipoPokemon.FUEGO, listOf("Tinovictoria"), listOf(0), emptyList(), R.drawable.victini, mapOf(MetodoEvolutivo.NINGUNO to "Etapa final")),
@@ -166,10 +174,12 @@ object Pokedex {
         Pokemon(155, "Genesect", TipoPokemon.BICHO, TipoPokemon.ACERO, listOf("Descarga"), listOf(155), emptyList(), R.drawable.genesect, mapOf(MetodoEvolutivo.NINGUNO to "Etapa final"))
     )
 
+    /** Devuelve la lista completa de Pokémon de la Pokédex. */
     fun getPokemon(): List<Pokemon> {
         return pokemonPokedex
     }
 
+    /** Busca y devuelve el Pokémon con el ID de Pokédex indicado, o null si no existe. */
     fun getPokemonById(id: Int): Pokemon? {
         return pokemonPokedex.find { it.idPokedex == id }
     }

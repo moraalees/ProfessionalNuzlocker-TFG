@@ -10,6 +10,16 @@ import com.example.professionalnuzlocker.data.model.enum_classes.EstadoPokemon
 import com.example.professionalnuzlocker.data.remote.FirestorePartidaRepository
 import kotlinx.coroutines.launch
 
+/**
+ * ViewModel de [PantallaDatosJuego] que carga la partida activa desde Firestore y permite
+ * gestionar el equipo del jugador.
+ *
+ * Expone [partida] (snapshot de la partida actual) y [cargando] (indicador de carga inicial).
+ * Las operaciones principales son [actualizarDatosPokemon] (editar mote, nivel y habilidad),
+ * [moverPCaEquipo] (pasar un Pokémon del PC al equipo), [intercambiarConEquipo] (sustituir
+ * un miembro del equipo por uno del PC) y [evolucionarPokemon] (cambiar la especie del
+ * Pokémon y actualizar sus datos). Todas persisten cambios en Firestore.
+ */
 class PantallaDatosJuegoViewModel : ViewModel() {
 
     private val repository = FirestorePartidaRepository()
@@ -24,6 +34,7 @@ class PantallaDatosJuegoViewModel : ViewModel() {
         cargarPartida()
     }
 
+    /** Carga la partida activa desde Firestore y almacena el ID del documento. */
     private fun cargarPartida() {
         viewModelScope.launch {
             repository.cargarPartida().onSuccess { (docId, p) ->
