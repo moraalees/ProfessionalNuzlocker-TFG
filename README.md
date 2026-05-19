@@ -14,7 +14,7 @@
 
 | # | Sección |
 |---|---------|
-| 1 | [Introducción](#1-introduccion) |
+| 1 | [Introducción](#1-introducción) |
 | 2 | [Descripción del proyecto](#2-descripción-del-proyecto) |
 | 3 | [Objetivos del proyecto](#3-objetivos-del-proyecto) |
 | 4 | [Alcance del proyecto](#4-alcance-del-proyecto) |
