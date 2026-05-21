@@ -208,17 +208,17 @@ El desarrollo de la aplicación se dividió en la UI, la lógica detrás de esta
 
 ### Cronograma
 
-El proyecto se desarrolló entre finales de febrero y mayo de 2026, con una duración aproximada de catorce semanas. Como se puede ver en el siguiente cronograma, el principio del desarrollo comenzó declarando los datos necesarios para el futuro de la aplicación, como los objetos [`Pokemon`](app/src/main/java/com/example/professionalnuzlocker/data/model/Pokemon.kt), [`CombateImportante`](app/src/main/java/com/example/professionalnuzlocker/data/model/CombateImportante.kt), [`Rutas`](app/src/main/java/com/example/professionalnuzlocker/data/model/enum_classes/Rutas.kt), [`TipoCombate`](app/src/main/java/com/example/professionalnuzlocker/data/model/enum_classes/TipoCombate.kt), etc. 
+El proyecto se desarrolló entre finales de febrero y mayo de 2026, con una duración aproximada de catorce semanas. Como se puede ver en el siguiente cronograma, el principio del desarrollo comenzó declarando los datos necesarios para el futuro de la aplicación, como los objetos [`Pokemon`](app/src/main/java/com/example/professionalnuzlocker/data/model/Pokemon.kt), [`CombateImportante`](app/src/main/java/com/example/professionalnuzlocker/data/model/CombateImportante.kt), [`Rutas`](app/src/main/java/com/example/professionalnuzlocker/data/model/enum_classes/Rutas.kt), [`TipoCombate`](app/src/main/java/com/example/professionalnuzlocker/data/model/enum_classes/TipoCombate.kt), etc.
 
-Tras la primera semana, se estuvo trabajando durante 2 semanas en las clases [`Pokedex`](app/src/main/java/com/example/professionalnuzlocker/data/repository/Pokedex.kt), [`CombateRepository`](app/src/main/java/com/example/professionalnuzlocker/data/repository/CombateRepository.kt) y [`RutasRepository`](app/src/main/java/com/example/professionalnuzlocker/data/repository/RutasRepository.kt), declarando y organizando todos los datos estáticos y globales de la aplicación para todos los usuarios. 
+Tras la primera semana, se estuvo trabajando durante 2 semanas en las clases [`Pokedex`](app/src/main/java/com/example/professionalnuzlocker/data/repository/Pokedex.kt), [`CombateRepository`](app/src/main/java/com/example/professionalnuzlocker/data/repository/CombateRepository.kt) y [`RutasRepository`](app/src/main/java/com/example/professionalnuzlocker/data/repository/RutasRepository.kt), declarando y organizando todos los datos estáticos y globales de la aplicación para todos los usuarios.
 
-Tras esto, y durante 2 semanas, se programaron las pantallas principales ([`PantallaInicio`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/home/PantallaInicio.kt), [`PantallaGuia`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/home/PantallaInicio.kt), [`PantallaFormulario`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/form/PantallaFormulario.kt)) junto a sus ViewModels ([`PantallaInicioViewModel`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/home/PantallaInicioViewModel.kt), [`PantallaFormularioViewModel`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/form/PantallaFormularioViewModel.kt)). Además, la lógica de Firebase también se pudo conseguir en esta semana, junto a las pantallas [`PantallaLogin`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/auth/PantallaLogin.kt) y [`PantallaRegistroAuth`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/auth/PantallaRegistroAuth.kt). 
+Tras esto, y durante 2 semanas, se programaron las pantallas principales ([`PantallaInicio`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/home/PantallaInicio.kt), [`PantallaGuia`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/home/PantallaInicio.kt), [`PantallaFormulario`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/form/PantallaFormulario.kt)) junto a sus ViewModels ([`PantallaInicioViewModel`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/home/PantallaInicioViewModel.kt), [`PantallaFormularioViewModel`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/form/PantallaFormularioViewModel.kt)). Además, la lógica de Firebase también se pudo conseguir en esta semana, junto a las pantallas [`PantallaLogin`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/auth/PantallaLogin.kt) y [`PantallaRegistroAuth`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/auth/PantallaRegistroAuth.kt).
 
-Por las siguientes 3 semanas, el sistema de navegación entre [`PantallaRegistro`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/register/PantallaRegistro.kt), [`PantallaPokedex`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/pokedex/PantallaPokedex.kt), [`PantallaDatosJuego`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/infoRun/PantallaDatosJuego.kt) y [`PantallaChat`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/chat/PantallaChat.kt) estaría completado, y las 3 primeras ya funcionales parcialmente, mostrando Pokémon, rutas y combates adecuadamente. 
+Por las siguientes 3 semanas, el sistema de navegación entre [`PantallaRegistro`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/register/PantallaRegistro.kt), [`PantallaPokedex`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/pokedex/PantallaPokedex.kt), [`PantallaDatosJuego`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/infoRun/PantallaDatosJuego.kt) y [`PantallaChat`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/chat/PantallaChat.kt) estaría completado, y las 3 primeras ya funcionales parcialmente, mostrando Pokémon, rutas y combates adecuadamente.
 
-La siguiente semana todo el trabajo se centró en el sonido y cambio de contraseña de Auth en la aplicación. 
+La siguiente semana todo el trabajo se centró en el sonido y cambio de contraseña de Auth en la aplicación.
 
-Por último, en las semanas 10-12 se realizó, en su mayoría, el funcionamiento del [`Backend`](https://github.com/moraalees/ProfessionalNuzlocker-BE), siguiendo el guardado de archivos PDF y la [`PantallaEstadisticas`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/stats/PantallaEstadisticas.kt). 
+Por último, en las semanas 10-12 se realizó, en su mayoría, el funcionamiento del [`Backend`](https://github.com/moraalees/ProfessionalNuzlocker-BE), siguiendo el guardado de archivos PDF y la [`PantallaEstadisticas`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/stats/PantallaEstadisticas.kt).
 
 Las semanas 13-14 fueron dedicadas a documentación del proyecto y preparación de la presentación de este.
 
@@ -279,19 +279,19 @@ gantt
 ### Recursos preventivos
 
 - Para evitar el scope creep, el alcance se definió desde el inicio, evaluando cualquier nueva funcionalidad frente al calendario antes de implementarla.
-  
+
 - Para mitigar la dependencia de Firebase, la arquitectura MVVM aísla la capa de datos en repositorios intercambiables.
-  
+
 - NuzBot muestra un indicador de carga visible y un mensaje de error claro cuando el servicio no responde.
-  
+
 - El desarrollo se estructuró en tareas pequeñas con estimaciones realistas y revisión semanal del progreso.
-  
+
 - Las reglas de seguridad de Firestore protegen contra escrituras no autorizadas, y la estructura de datos se valida en el ViewModel antes de persistirse.
 
 ### Plan de mitigación de consecuencias
 
 - Si Firebase sufre una interrupción grave, la capa repositorio permite migrar a otro proveedor (Supabase, Room local, ...) sin reescribir la lógica de negocio.
-  
+
 - Si NuzBot deja de estar disponible, se desactiva su sección en la interfaz y se muestra un aviso al usuario, estudiando un proveedor alternativo.
 
 - Si se materializan retrasos, se reduce el pulido visual para priorizar la funcionalidad nuclear y se ajusta el cronograma.
@@ -308,13 +308,204 @@ Para poder plasmar y sentar las ideas sobre algunas pantallar y mecánicas, se h
 
 1. `Pantalla Datos del Juego`. Esta pantalla mostraría los Pokémon que capturar y los combates a experimentar durante el desarrollo de la partida, pudiendo escoger qué Pokémon se capturó en cierta ruta, qué combates se han vencido, qué Pokémon están en el equipo en todo momento, etc. [`Boceto`](AppDesign/BocetoPantallaDatosJuego.png) / [`Resultado`](AppDesign/PantallaDatosJuego.jpeg)
 2. `Pantalla Pokedex`. Esta pantalla mostraría todos los Pokémon disponibles en los juegos de pokémon Negro/Blanco. Cada uno junto a sus tipos, línea evolutiva, habilidades, etc. [`Boceto`](AppDesign/BocetoPantallaPokedex.png) / [`Resultado`](AppDesign/PantallaPokedex.jpeg)
-3. `Pantalla Estadísticas`. Esta pantalla mostraría todos los datos relevantes de la partida de un jugador. Se recolectarían los Pokémon más usados, los tipos de Pokémon más capturados, etc. [`Boceto`](AppDesign/BocetoPantallaEstadisticas.png) / [`Resultado1`](AppDesign/PantallaEstadisticas1.jpeg) - [`Resultado2`](AppDesign/PantallaEstadisticas2.jpeg) 
+3. `Pantalla Estadísticas`. Esta pantalla mostraría todos los datos relevantes de la partida de un jugador. Se recolectarían los Pokémon más usados, los tipos de Pokémon más capturados, etc. [`Boceto`](AppDesign/BocetoPantallaEstadisticas.png) / [`Resultado1`](AppDesign/PantallaEstadisticas1.jpeg) - [`Resultado2`](AppDesign/PantallaEstadisticas2.jpeg)
+
+### Especificaciones técnicas
+
+| Elemento | Detalle |
+|----------|---------|
+| **Lenguaje** | Kotlin |
+| **UI framework** | Jetpack Compose (Material 3) |
+| **Arquitectura** | MVVM (Model-View-ViewModel) |
+| **Navegación** | Jetpack Navigation Compose |
+| **Autenticación** | Firebase Authentication |
+| **Base de datos** | Cloud Firestore — colección `partidas/{uid}/partidas` |
+| **API IA** | REST propio en Render — `POST /chat`, autenticado con Firebase ID Token |
+| **Cliente HTTP** | Retrofit + OkHttp (timeout 60 s) |
+| **Carga de imágenes** | Coil |
+| **Generación PDF** | Librería Android nativa, guardado en `Downloads/` |
+| **Audio** | MediaPlayer |
+| **Versión mínima Android** | 8.0 (API 26) |
+| **IDE** | Android Studio |
+| **Control de versiones** | Git + GitHub |
+
+La aplicación no usa base de datos local ya que Firestore actúa como única fuente de verdad para el estado de la partida. Los datos estáticos del juego se mantienen en singletons en memoria , cargados una sola vez al arrancar la app.
+
+### Diagramas
+
+#### Diagrama de componentes
+
+Muestra cómo se organizan y conectan los componentes de la aplicación en tres capas principales. La capa UI agrupa todas las pantallas Compose, divididas en el flujo de autenticación, el menú principal y las cuatro pantallas de juego accesibles mediante la barra de navegación inferior. 
+
+Cada pantalla, si toca, delega su lógica en un ViewModel propio, que a su vez se comunica con la capa de repositorios. Los repositorios de autenticación y de partida son interfaces con implementación Firebase, mientras que `Pokedex`, `CombateRepository` y `RutasRepository` son singletons en memoria con datos estáticos del juego. El `ChatViewModel` es el único que además llama directamente al servicio REST externo a través de `ChatApiService`.
+
+```mermaid
+flowchart TD
+    subgraph UI["UI — Jetpack Compose"]
+        subgraph AUTH_UI["Autenticación"]
+            PL["PantallaLogin"]
+            PRA["PantallaRegistroAuth"]
+        end
+        subgraph NAV_UI["Menú Principal"]
+            PI["PantallaInicio"]
+            PG["PantallaGuia"]
+            PF["PantallaFormulario"]
+        end
+        subgraph GAME_UI["Juego — Bottom Navigation"]
+            PR["PantallaRegistro"]
+            PP["PantallaPokedex"]
+            PDJ["PantallaDatosJuego"]
+            PC["PantallaChat"]
+            PE["PantallaEstadisticas"]
+        end
+    end
+
+    subgraph VM["ViewModels"]
+        AuthVM["AuthViewModel"]
+        InicioVM["InicioViewModel"]
+        FormVM["FormularioViewModel"]
+        RegVM["RegistroViewModel"]
+        DatosVM["DatosJuegoViewModel"]
+        EstVM["EstadisticasViewModel"]
+        ChatVM["ChatViewModel"]
+    end
+
+    subgraph REPOS["Repositorios"]
+        AuthRepo[/"AuthRepository (interface)"/]
+        PartidaRepo[/"PartidaRepository (interface)"/]
+        CombateRepo["CombateRepository\n30 combates importantes"]
+        PokedexSingleton["Pokedex\n156 especies Gen 5"]
+        RutasRepo["RutasRepository"]
+    end
+
+    subgraph EXT["Servicios Externos"]
+        FbAuth["Firebase Auth"]
+        Firestore["Cloud Firestore\npartidas/uid/partidas"]
+        ChatAPI["ChatApiService\nRetrofit — POST /chat"]
+        Backend["REST Backend\nonrender.com"]
+    end
+
+    PL & PRA --> AuthVM
+    PI --> InicioVM
+    PF --> FormVM
+    PR --> RegVM
+    PDJ --> DatosVM
+    PE --> EstVM
+    PC --> ChatVM
+    PP -.->|solo lectura| PokedexSingleton
+
+    AuthVM --> AuthRepo
+    InicioVM --> PartidaRepo
+    FormVM --> PartidaRepo
+    RegVM --> PartidaRepo
+    RegVM --> CombateRepo
+    DatosVM --> PartidaRepo
+    EstVM --> PartidaRepo
+    ChatVM --> PartidaRepo
+    ChatVM --> ChatAPI
+
+    AuthRepo --> FbAuth
+    PartidaRepo --> Firestore
+    ChatAPI --> Backend
+```
+
+#### Diagrama de casos de uso
+
+Muestra qué puede hacer cada actor del sistema. El `Jugador` es el actor principal e interactúa con prácticamente todos los casos de uso. `Firebase` participa como actor secundario en todo lo relacionado con autenticación y persistencia de la partida. `NuzBot API` es el actor externo que resuelve las consultas del asistente IA.
+
+Los casos de uso de `Gameplay` tienen relaciones de inclusión, como al registrar un encuentro en ruta que desemboca siempre en capturar o perder un Pokémon. El fin de partida se dispara automáticamente por perder un combate importante o por perder a más de 10 Pokémon.
+
+```mermaid
+flowchart LR
+    Jugador(["Jugador"])
+    Firebase(["Firebase"])
+    NuzBot(["NuzBot API"])
+
+    subgraph SISTEMA["Sistema ProfessionalNuzlocker"]
+        subgraph A["Autenticacion"]
+            UC1("Registrarse")
+            UC2("Iniciar sesion")
+            UC3("Cerrar sesion")
+        end
+
+        subgraph B["Partida"]
+            UC4("Crear nueva partida")
+            UC5("Ver guia")
+            UC6("Borrar partida")
+        end
+
+        subgraph C["Gameplay"]
+            UC7("Registrar encuentro en ruta")
+            UC8("Capturar Pokemon")
+            UC9("Perder Pokemon")
+            UC10("Registrar combate importante")
+            UC11("Fin de partida")
+        end
+
+        subgraph D["Gestion de equipo"]
+            UC12("Mover Pokemon equipo/PC")
+            UC13("Evolucionar Pokemon")
+        end
+
+        subgraph E["Informacion"]
+            UC14("Consultar Pokedex")
+            UC15("Ver estadisticas")
+            UC16("Exportar PDF")
+        end
+
+        subgraph F["Asistencia IA"]
+            UC17("Consultar NuzBot")
+        end
+    end
+
+    Jugador --> UC1 & UC2 & UC3
+    Jugador --> UC4 & UC5 & UC6
+    Jugador --> UC7
+    UC7 --> UC8
+    UC7 --> UC9
+    Jugador --> UC10
+    UC10 -->|pierde combate| UC11
+    UC7 -->|sin vidas| UC11
+    Jugador --> UC12 & UC13
+    Jugador --> UC14 & UC15 & UC16
+    Jugador --> UC17
+
+    Firebase --> UC1 & UC2 & UC3
+    Firebase --> UC4 & UC6 & UC7 & UC10 & UC11 & UC12
+
+    NuzBot --> UC17
+```
 
 ---
 
 ## 9. Instalación y preparación
 
-> *Sección pendiente de desarrollo.*
+### Procedimientos para hacer funcionar el proyecto
+
+Para ejecutar Professional Nuzlocker en local se necesita tener instalado Android Studio con el SDK de Android y un dispositivo físico o emulador con Android 8.0 (API 26) o superior.
+
+Los pasos a seguir son los siguientes:
+
+1. Clonar el repositorio desde GitHub, usando la clave HTTPS `https://github.com/moraalees/ProfessionalNuzlocker-TFG.git` en el comando.
+2. Abrir el proyecto en Android Studio con *Open an existing project*.
+3. Añadir el archivo `google-services.json` en la carpeta `app/`. Este archivo se obtiene desde la consola de Firebase del proyecto y no está incluido en el repositorio por razones de seguridad. Sin él, la autenticación y Firestore no funcionarán, y la palicación será totalmente inútil.
+4. Sincronizar las dependencias de Gradle pulsando *Sync Now* cuando Android Studio lo solicite.
+5. Conectar un dispositivo Android con depuración USB activada, o lanzar un emulador desde el AVD Manager.
+6. Una vez el dispositivo o emulador estén activos, ejecutar la aplicación con el botón *Run* o con `Shift + F10`.
+
+El backend de NuzBot ya está desplegado en Render y no requiere ninguna configuración adicional por parte del desarrollador. Las llamadas a la API se autentican automáticamente con el token de Firebase del usuario en sesión.
+
+### Procedimientos para el control de versiones
+
+El proyecto utiliza Git con un repositorio remoto en GitHub. Al ser un proyecto individual, el flujo de trabajo es sencillo y directo, ya que se trabaja siempre sobre la rama `main`, sin ramas de feature ni pull requests. Los cambios se confirman con commits cortos que reflejan qué se ha modificado o añadido.
+
+En un contexto de equipo, lo recomendable sería adoptar un flujo basado en ramas, como un modelo más ligero con una rama por funcionalidad (`feature/nombre`) que se integra en `main` mediante PRs (pull requests), con al menos una revisión de otro miembro antes de hacer el merge, permitiendo aislar cambios, detectar conflictos antes de que lleguen a la rama principal y mantener un historial más claro.
+
+### Procedimientos para registrar las incidencias
+
+Al tratarse de un proyecto en solitario, no se sigue ningún procedimiento formal o eficaz para el registro de incidencias. Cuando aparece un error o un comportamiento inesperado durante el desarrollo o las pruebas, se identifica la causa y se corrige directamente en el código o desde el repositorio, confirmando el cambio con un commit que identifique de manera simple el problema resuelto.
+
+En un entorno de equipo, lo adecuado sería utilizar GitHub Issues, para registrar cada incidencia. Cada issue debería incluir una descripción clara del problema, los pasos para reproducirlo, el comportamiento esperado frente al observado y capturas de pantalla o logs relevantes que identifiquen de manera detallada el problema. Las incidencias se etiquetarían por tipo y se asignarían a un responsable, cerrándose una vez verificada la corrección.
 
 ---
 
