@@ -302,7 +302,13 @@ gantt
 
 ## 8. Diseño
 
-> *Sección pendiente de desarrollo.*
+### Prototipado
+
+Para poder plasmar y sentar las ideas sobre algunas pantallar y mecánicas, se ha optado por el uso de diferentes bocetos los cuáles servirían de guía para el desarrollo de diseño.
+
+1. `Pantalla Datos del Juego`. Esta pantalla mostraría los Pokémon que capturar y los combates a experimentar durante el desarrollo de la partida, pudiendo escoger qué Pokémon se capturó en cierta ruta, qué combates se han vencido, qué Pokémon están en el equipo en todo momento, etc. [`Boceto`](AppDesign/BocetoPantallaDatosJuego.png) / [`Resultado`](AppDesign/PantallaDatosJuego.jpeg)
+2. `Pantalla Pokedex`. Esta pantalla mostraría todos los Pokémon disponibles en los juegos de pokémon Negro/Blanco. Cada uno junto a sus tipos, línea evolutiva, habilidades, etc. [`Boceto`](AppDesign/BocetoPantallaPokedex.png) / [`Resultado`](AppDesign/PantallaPokedex.jpeg)
+3. `Pantalla Estadísticas`. Esta pantalla mostraría todos los datos relevantes de la partida de un jugador. Se recolectarían los Pokémon más usados, los tipos de Pokémon más capturados, etc. [`Boceto`](AppDesign/BocetoPantallaEstadisticas.png) / [`Resultado1`](AppDesign/PantallaEstadisticas1.jpeg) - [`Resultado2`](AppDesign/PantallaEstadisticas2.jpeg) 
 
 ---
 
