@@ -616,7 +616,7 @@ El backend de NuzBot no requiere un proceso de distribución propio en el contex
 
 ## 12. Manuales
 
-> *Sección pendiente de desarrollo.*
+Para poder entender el flujo de lógica y pantallas desde un punto de vista no profesional para usar la aplicación desde su instalación hasta su final, se ha creado el siguiente [`Manual de Usuario`](info/manual_usuario.md). Este manual contiene una guía para poder instalar el proyecto y cómo usarlo de forma eficaz sin problemas.
 
 ---
 
