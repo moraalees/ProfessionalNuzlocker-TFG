@@ -511,13 +511,106 @@ En un entorno de equipo, lo adecuado sería utilizar GitHub Issues, para registr
 
 ## 10. Documentación de ejecución y plan de calidad
 
-> *Sección pendiente de desarrollo.*
+### Procedimientos operativos
+
+Cuando se despliega la aplicación, Android inicializa el grafo de dependencias de Compose y vuelve a usar la sesión activa (si hay) de Firebase Authentication. Si el usuario ya tiene sesión activa, se navega directamente a `PantallaInicio`, donde se consulta Firestore para determinar si existe una partida en curso. Si es así, el jugador accede a dicha pantalla. En caso contrario, aparecerá en `PantallaLogin` para que o bien inicie su sesión o bien cree una cuenta.
+
+Durante el ciclo de vida de la aplicación, cada pantalla delega su estado en un ViewModel propio (si tiene) que expone `StateFlow`. Cuando el usuario realiza una acción, el ViewModel actualiza el estado local para mantener la interfaz reactiva y propaga el cambio a Firestore mediante una corrutina. Si la operación en la nube falla, el error se notifica al usuario mediante un mensaje visible en pantalla, sin revertir el estado local.
+
+El sistema de audio funciona de forma independiente a la navegación. `AudioManager` gestiona dos `MediaPlayer` con fundido cruzado de 1 segundo al pasar de la música de exploración a la música de combate, y viceversa. Los efectos de sonido suaves, como el clic, subida de nivel y captura, se reproducen mediante `SoundPool`. Durante una captura, el volumen de la música de fondo se reduce temporalmente 2,5 segundos. El usuario puede alternar el sonido entre silenciado y activo desde un botón en la esquina superior derecha de `PantallaInicio`. El estado de mute se mantiene en memoria durante la sesión y se restablece al reiniciar la aplicación.
+
+La exportación a PDF se lanza desde un botón visible en la última fase de `PantallaEstadisticas`, el resumen final. El documento se construye con las estadísticas calculadas por el ViewModel y se guarda en la carpeta `Downloads/` del dispositivo con el nombre `resumen_aventura.pdf`. Una vez completada la escritura, se muestra un `Toast` con el texto "PDF guardado en Descargas".
+
+
+### Registro de pruebas
+
+Las pruebas del proyecto son de tipo manual, debido a la sencillez de estas. Estas, fueron ejecutadas sobre un dispositivo físico Android. A continuación se detallan los casos de prueba verificados a lo largo del desarrollo:
+
+#### Autenticación
+- Registro con correo y contraseña válidos, verificando la creación del usuario en Firebase Authentication y navegación directa a `PantallaInicio`.
+- Intento de registro con correo ya existente, verificando que se muestra el mensaje de error correspondiente.
+- Inicio de sesión con credenciales correctas e incorrectas, verificando el comportamiento esperado en ambos casos.
+- Cierre de sesión, verificando que el estado de Firestore se libera y el usuario queda sin sesión activa.
+
+#### Configuración de partida
+- Creación de nueva partida con distintas combinaciones de versión de juego, sexo, nombre e inicial, verificando que el documento en Firestore tiene la información correspondiente.
+- Verificación de que no es posible crear una segunda partida activa mientras existe una en curso.
+
+#### Registro de rutas y encuentros
+- Registro de encuentro con captura, verificando que el Pokémon aparece en el equipo activo (si corresponde) y la ruta queda marcada como visitada.
+- Registro de encuentro con Pokémon derrotado, verificando que no se bloquee la ruta ni se guarde al Pokémon.
+- Verificación del bloqueo de nuevos encuentros en rutas ya visitadas.
+- Comprobación del fin automático del Nuzlocke al llegar a cero vidas o perder un combate.
+
+#### Gestión del equipo
+- Edición de mote, nivel, habilidad y estado de distintos Pokémon, verificando la persistencia de los cambios en Firestore.
+- Registro de evolución, verificando el cambio de especie y la actualización de la imagen en la interfaz.
+- Movimiento de Pokémon entre equipo activo y PC, verificando la consistencia de los datos.
+
+#### Combates importantes
+- Registro de varios combates con distintos equipos activos, verificando el almacenamiento correcto y su visualización posterior.
+- Verificación del fin de un combate importante con bajas, pudiendo anotar los fallecidos por sus respectivas causas y resta de vidas.
+
+#### NuzBot
+- Envío de preguntas con partida activa, verificando que la respuesta hace referencia al contexto real de la sesión.
+
+#### Estadísticas y exportación PDF
+- Verificación del cálculo correcto de rankings y distribuciones al finalizar la partida.
+- Generación y apertura del archivo PDF desde la carpeta `Downloads/`, verificando el contenido del documento.
+
+### Indicadores de calidad
+
+Los siguientes criterios han guiado la evaluación de la calidad del producto a lo largo del desarrollo:
+
+**Estabilidad:** La aplicación no debe presentar cierres inesperados durante el uso común. Todos los flujos principales han sido ejecutados repetidamente en dispositivo físico sin producir ningún crash no controlado. Los errores esperables, como la ausencia de conexión o la falta de respuesta del backend, están manejados y controlados con mensajes de error visibles al usuario.
+
+**Consistencia de datos:** Toda acción que modifique el estado de la partida debe reflejarse de forma coherente en Firestore y en la interfaz. Se ha verificado que no existen diferencias entre el estado mostrado en pantalla y el almacenado en la base de datos tras operaciones de captura, muerte, evolución o fin de partida.
+
+**Persistencia entre sesiones:** Los datos de la partida sobreviven al cierre y reapertura de la aplicación.
+
+**Tiempo de respuesta de NuzBot:** Las respuestas del asistente se obtienen en un tiempo razonable bajo condiciones normales de red. El indicador de carga permanece visible durante la espera y desaparece al recibir la respuesta.
+
+**Corrección del PDF generado:** El archivo exportado debe contener los datos de la partida de forma ordenada y sin errores visuales de organización, abrirse correctamente con el visor de PDF del dispositivo y guardarse en la ruta esperada.
+
+### Métodos de verificación
+
+La verificación del correcto funcionamiento de la aplicación se ha llevado a cabo mediante los siguientes métodos:
+
+**Prueba en dispositivo físico:** El método principal de verificación ha sido ejecutar la aplicación en un dispositivo Android real, recorriendo los flujos completos de uso y comprobando visualmente el comportamiento esperado en cada momento. Estas comprobaciones se han realizado sobre todo a lo largo de la creación del proyecto.
+
+**Inspección de la consola de Firebase:** Tras cada operación que implique escritura en Firestore, se ha verificado directamente en la consola de Firebase que el documento correspondiente contiene los datos correctos. Esto permite detectar cualquier error de información que no sea exacta entre lo que muestra la interfaz y lo que realmente se ha persistido.
+
+**Logcat de Android Studio:** Durante las sesiones de prueba con dispositivo conectado, se ha monitoreado el canal de logs de Android Studio para identificar excepciones, advertencias de Compose y errores de red. Los errores detectados se han corregido en el momento que se ha averiguado la solución a ellos.
+
+**Revisión del archivo PDF generado:** Cada prueba de exportación ha concluido con la apertura del archivo resultante en el visor de PDF del dispositivo, verificando visualmente la presencia e integridad de todos los bloques de contenido esperados.
 
 ---
 
 ## 11. Distribución
 
-> *Sección pendiente de desarrollo.*
+### Tecnología de distribución
+
+Professional Nuzlocker se distribuye como un archivo APK generado directamente desde Android Studio mediante el proceso de compilación del IDE. No se utiliza Google Play Store como canal de distribución ni ningún tipo de sitio de venta online, principalmente debido a las restricciones de propiedad intelectual de Nintendo y The Pokémon Company, que hacen poco porbable la publicación comercial o pública de una aplicación que usa sus datos propios sin autorización expresa, contando también porque es un proyecto sin ánimo de lucro.
+
+El APK se firma digitalmente con un keystore propio generado en Android Studio antes de la compilación, lo que garantiza la integridad del paquete y permite actualizaciones sucesivas sobre el mismo dispositivo sin necesidad de desinstalar la versión anterior. Durante la compilación en modo release, el compilador R8 aplica reducción de código y ofuscación de nombres de clase, lo que reduce el tamaño del APK y dificulta la ingeniería inversa del código fuente. Esto es una función propia del IDE.
+
+El repositorio del proyecto está alojado en GitHub de forma pública, lo que permite acceder al código fuente completo, sin observar, como es evidente, cualquier dato sensible como la configuración de Firebase. Los archivos APK del proyecto pueden adjuntarse como assets de una GitHub Release, ofreciendo una URL de descarga directa y un historial de versiones claro vinculado a commits concretos.
+
+El backend de NuzBot está desplegado de forma permanente en Render, plataforma de hosting en la nube que proporciona un entorno de ejecución continuo sin coste para proyectos de poca demanda. La URL del endpoint es fija y está embebida en la configuración de Retrofit de la aplicación, por lo que no requiere ningún ajuste por parte del usuario final.
+
+### Descripción del proceso
+
+El proceso de distribución de una nueva versión de la aplicación sigue los pasos descritos a continuación:
+
+En primer lugar, se verifica que el código en la rama `main` es estable y que todas las funcionalidades previstas para la versión están completas y probadas. Seguidamente, se abre Android Studio y se accede al menú *Build → Generate Signed Bundle / APK*. Se selecciona la opción APK, se proporciona el keystore del proyecto junto con sus credenciales, se elige la variante `release` y se inicia la compilación.
+
+Una vez concluida la compilación, Android Studio deposita el APK firmado en la ruta `app/release/app-release.apk` dentro del directorio del proyecto. Este archivo es el artefacto final listo para instalar.
+
+Para la distribución del APK existen dos vías:
+La primera es la transferencia directa, simplemente copiar el archivo al dispositivo mediante cable USB o por cualquier medio de transferencia de archivos, abrir el explorador del dispositivo, localizar el APK y ejecutarlo. El sistema Android solicitará al usuario que habilite la instalación de aplicaciones de orígenes desconocidos si no lo tiene activado previamente. 
+La segunda vía es la publicación como GitHub Release, que consiste en crear una nueva release en el repositorio de GitHub asociada al commit correspondiente, adjuntar el APK como asset y proporcionar las notas de versión pertinentes. Cualquier persona con acceso al repositorio podrá descargar e instalar el archivo desde esa URL.
+
+El backend de NuzBot no requiere un proceso de distribución propio en el contexto de este proyecto, ya que el despliegue en Render es continuo y cualquier actualización del código del repositorio del backend se propaga automáticamente al entorno en producción mediante el pipeline de integración de la plataforma.
 
 ---
 
