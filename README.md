@@ -68,20 +68,20 @@ Ninguna solución existente combina un seguimiento completo del Nuzlocke cómodo
 
 ### Tendencias
 
-El proyecto se enmarca en dos tendencias tecnológicas actuales:
+En el proyecto se integran dos tendencias tecnológicas actuales:
 
-- **Integración de IA en aplicaciones móviles:** La incorporación de modelos de lenguaje en apps de consumo es cada vez más habitual, como podemos observar en plataformas y servicios de Google (Gmail, Google Docs, Google Sheets, etc.). Esto se debe a que la IA sirve como herramienta eficaz a la hora de entender el contexto de la aplicación y cómo moverse por esta. Professional Nuzlocker utiliza esta tecnología para ofrecer respuestas personalizadas al estado real de la partida del usuario, ya que la UI es sencilla y cómoda de usar.
+- **Integración de IA en aplicaciones móviles:** El uso de la IA en diferentes aplicaciones se ha visto muy impulsado recientemente. Esto es evident al verse integradas en aplicaciones de Google (Gmail, Google Docs, Google Sheets, etc.), que emplean IA para ayudar al usuarioa entender mejor el contexto y moverse mejor por el entorno de la aplicación. Sobre esto, Professional Nuzlocker aprovecha esta tecnología para ofrecer respuestas específicas y servibles a momentos o decisiones importantes en las partida del jugador.
 
-- **Desarrollo Android con Jetpack Compose:** La interfaz declarativa de Jetpack Compose es de los estándares más modernos para el desarrollo nativo en Android, facilitando la creación de interfaces reactivas, dinámicas y mantenibles con un código más compacto y legible. Además, su integración con las arquitecturas modernas de Android permite acelerar el desarrollo y mejorar la escalabilidad y mantenibilidad de la aplicación a largo plazo, lo cuál es indispensable para grandes proyectos.
+- **Desarrollo Android con Jetpack Compose:** La interfaz de Jetpack Compose es uno de los estándares más novedosos y de los mejores para el desarrollo nativo de aplicaciones Android, permitiendo la creación de interfaces dinámicas y estilizadas utilizando poco código. Además, su avance por las arquitecturas modernas de Android permite una rápida evolución del software y mayor eficiencia en el mantenimiento a gran escala, requisito muy clave a la hora de escoger interfaces para proyectos grandes y/o largos.
 
 ---
 
 ### Beneficios o expectativas del proyecto
 
-- El jugador **nunca pierde información** de su partida. Todas las capturas, muertes, combates y estadísticas quedan persistidas en la nube mediante Firebase Firestore, vinculadas a su cuenta personal. Incluso si el jugador decide empezar una nueva partida, su antiguo intento podrá ser guardado a través de la generación de un documento PDF con suficiente información para no olvidar nada.
-- La **integración con NuzBot** reduce el tiempo que el jugador dedica a buscar información externa durante la partida, ya que la IA responde realmente rápido a cualquier pregunta.
-- La aplicación sirve como **referencia técnica** de una arquitectura Android moderna (MVVM, Compose, Firebase, API REST) aplicada a un dominio concreto y bien acotado.
-- Bajo temas personales, el principal beneficio es **la mera existencia** de una herramienta concreta para este tipo de retos que sea suficientemente eficaz y cómoda para poder ser usada de forma continua y diaria por aquellos que son apasionados por la saga.
+- El jugador nunca pierde información de su partida. Todas las capturas, muertes, combates y estadísticas quedan persistidas en la nube mediante Firebase Firestore, vinculadas a su cuenta personal. Incluso si el jugador decide empezar una nueva partida, su antiguo intento podrá ser guardado a través de la generación de un documento PDF con suficiente información para no olvidar nada.
+- La integración con NuzBot reduce el tiempo que el jugador dedica a buscar información externa durante la partida, ya que la IA responde realmente rápido a cualquier pregunta.
+- La aplicación sirve como referencia técnica de una arquitectura Android moderna (MVVM, Compose, Firebase, API REST) aplicada a un dominio concreto y bien acotado.
+- Bajo temas personales, el principal beneficio es la mera existencia de una herramienta concreta para este tipo de retos que sea suficientemente eficaz y cómoda para poder ser usada de forma continua y diaria por aquellos que son apasionados por la saga.
 
 ---
 
@@ -335,7 +335,7 @@ La aplicación no usa base de datos local ya que Firestore actúa como única fu
 
 #### Diagrama de componentes
 
-Muestra cómo se organizan y conectan los componentes de la aplicación en tres capas principales. La capa UI agrupa todas las pantallas Compose, divididas en el flujo de autenticación, el menú principal y las cuatro pantallas de juego accesibles mediante la barra de navegación inferior. 
+Muestra cómo se organizan y conectan los componentes de la aplicación en tres capas principales. La capa UI agrupa todas las pantallas Compose, divididas en el flujo de autenticación, el menú principal y las cuatro pantallas de juego accesibles mediante la barra de navegación inferior.
 
 Cada pantalla, si toca, delega su lógica en un ViewModel propio, que a su vez se comunica con la capa de repositorios. Los repositorios de autenticación y de partida son interfaces con implementación Firebase, mientras que `Pokedex`, `CombateRepository` y `RutasRepository` son singletons en memoria con datos estáticos del juego. El `ChatViewModel` es el único que además llama directamente al servicio REST externo a través de `ChatApiService`.
 
@@ -607,7 +607,7 @@ En primer lugar, se verifica que el código en la rama `main` es estable y que t
 Una vez concluida la compilación, Android Studio deposita el APK firmado en la ruta `app/release/app-release.apk` dentro del directorio del proyecto. Este archivo es el artefacto final listo para instalar.
 
 Para la distribución del APK existen dos vías:
-- Transferencia direcata. Simplemente copiar el archivo al dispositivo mediante cable USB o por cualquier medio de transferencia de archivos, abrir el explorador del dispositivo, localizar el APK y ejecutarlo. El sistema Android solicitará al usuario que habilite la instalación de aplicaciones de orígenes desconocidos si no lo tiene activado previamente. 
+- Transferencia direcata. Simplemente copiar el archivo al dispositivo mediante cable USB o por cualquier medio de transferencia de archivos, abrir el explorador del dispositivo, localizar el APK y ejecutarlo. El sistema Android solicitará al usuario que habilite la instalación de aplicaciones de orígenes desconocidos si no lo tiene activado previamente.
 - GitHub Release. Consiste llanamente en crear una nueva release en el repositorio de GitHub asociada al commit correspondiente, adjuntar el APK como asset y proporcionar las notas de versión pertinentes. Cualquier persona con acceso al repositorio podrá descargar e instalar el archivo desde esa URL.
 
 El backend de NuzBot no requiere un proceso de distribución propio en el contexto de este proyecto, ya que el despliegue en Render es continuo y cualquier actualización del código del repositorio del backend se propaga automáticamente al entorno en producción mediante el pipeline de integración de la plataforma.
@@ -622,22 +622,227 @@ Para poder entender el flujo de lógica y pantallas desde un punto de vista no p
 
 ## 13. Conclusiones
 
-> *Sección pendiente de desarrollo.*
+### Informe final
+
+Professional Nuzlocker cumple con casi todos los objetivos establecidos al inicio del desarrollo del proyecto. La aplicación cumple correctamente con el ciclo completo de una partida Nuzlocke sobre Pokémon Negro/Blanco, ya que va desde el registro del usuario hasta la exportación del informe final en PDF, con persistencia en la nube, integración de un asistente de IA contextual y una interfaz coherente y pulida, como se especificó.
+
+Sin embargo, se planeaba desarrollar un backend funcional, para la integración de IA, empleando RAG (Retrieval Augmented Generation). En el presente proyecto, este backend no emplea este sistema, por motivos de poca experiencia en ello y tiempo.
+
+El desarrollo se llevó a cabo en catorce semanas por un único desarrollador, siguiendo el cronograma anteriormente detallado. El alcance definido desde el inicio no ha sido el definitivo, ya que varias decisiones lógicas han sido cambiadas por diversos motivos en cada caso:
+
+- Presencia de 3 partidas. En un principio, se planeaba permitir 3 partidas por jugador/cuenta. No obstante, esta funcionalidad se ha declarado como innecesaria. Con el fin de que el jugador viva de más cerca sus partidas, es mejor que se centre en una sola, en lugar de permitirle llevar 3 a la vez. Si este desea hacer más de 1, podría crearse otra cuenta.
+- RAG. Como se ha especificado anteriormente, este sistema para el backend se ha descartado al ser una idea muy grande ppara ser llevada por una experiencia muy básica en backends de IA.
+
+Desde un punto de vista ya técnico, el proyecto ha servido con creces como aplicación práctica de un stack Android moderno, el cuál se compone por MVVM con Jetpack Compose, Firebase como backend completo y consumo de una API REST externa autenticada. El resultado es una arquitectura limpia, mantenible y escalable en la que la separación de capas permite poder expandir funcionalidades o modificar algunas ya existentes sin perjudicar al resto.
+
+A un nivel más personal, el proyecto ha servido como una experiencia satisfactoria que mezcla motivación y aprendizaje. Desarrollar una herramienta que ayuda y resuelve un dilema real dentro de una afición personal ha ayudado a mantener el interés a lo largo de todo el proceso, y el resultado final es una aplicación que yo mismo usaré durante una partida en algún punto de mi vida.
+
+---
+
+### Resultados esperados
+
+| Objetivo específico | Estado |
+|---------------------|:------:|
+| Autenticación segura con Firebase | ✓ |
+| Estructura de datos de la partida en Firestore | ✓ |
+| Flujo completo de registro de la aventura | ✓ |
+| Gestión del equipo (equipo activo, PC y cementerio) | ✓ |
+| Integración de NuzBot (asistente de IA contextual) | ✓ |
+| Pantalla de estadísticas con rankings y distribución de tipos | ✓ |
+| Exportación a PDF en la carpeta Descargas | ✓ |
+| Experiencia de usuario coherente y pulida | ✓ |
+
+Todos los objetivos definidos en la [sección 3](#3-objetivos-del-proyecto) han sido implementados. Las únicas limitaciones conocidas, además de las ya expuestas, tienen que ver con el presupuesto del proyecto:
+- El modelo de IA gratuito ofrece una capacidad de respuesta inferior a los modelos de pago.
+- El backend alojado en Render puede introducir latencia variable en los cold starts del servicio.
+
+---
+
+### Viabilidad del proyecto
+
+Professional Nuzlocker demuestra su viabilidad técnica y funcional como proyecto de desarrollo individual. Los recursos tecnológicos utilizados son todos gratuitos en su nivel básico, lo que permite mantener la aplicación en producción sin siquiera coste alguno.
+
+En cuanto a la viabilidad como producto, la aplicación cubre una necesidad personal y real que no cubre actualmente ninguna herramienta existente. Sin embargo, su proyección comercial no está prevista por las restricciones de propiedad intelectual de Nintendo y The Pokémon Company, que hacen inviable una distribución pública a gran escala sin un acuerdo de licencia expreso, tal como se recoge en la [sección 4](#4-alcance-del-proyecto).
+
+Si el proyecto evolucionara hacia una versión con datos propioso tergiversados, su viabilidad de distribución mejoraría de forma significativa. En su estado actual, es una herramienta completamente funcional para uso personal y de comunidad.
+
+---
+
+### Mejoras futuras
+
+Las siguientes mejoras representan extensiones naturales del proyecto que no entraron en el alcance inicial por restricciones de tiempo o presupuesto:
+
+- **Soporte para más generaciones de Pokémon:** Ampliar la cobertura a otros juegos de la saga añadiendo sus respectivas rutas, combates y Pokédex.
+- **Reglas Nuzlocke personalizables:** Permitir al jugador definir sus propias reglas (número de vidas, *Species Clause*, *Sleep Clause*, etc.) haría la aplicación más flexible.
+- **Sistema de logros:** Introducir logros desbloqueables (primera captura, partida completada sin muertes, todos los gimnasios superados sin bajas, etc.) añadiría una motivacoón extra y haría cada aventura más intensa.
+- **Exportación PDF mejorada:** Incorporar imágenes de los Pokémon del equipo final y un diseño más elaborado en el documento generado.
+- **Historial de partidas:** Permitir al usuario revisar sus Nuzlockes anteriores y comparar estadísticas entre ellos.
+- **Modo sin conexión:** Implementar una caché local con Room para registrar rutas y capturas sin conexión, sincronizando con Firestore al recuperarla.
+- **Modelo de IA más potente:** Sustituir el modelo gratuito de OpenRouter por uno comercial mejoraría con grandes creces la calidad y precisión de las respuestas de NuzBot, especialmente en consultas sobre estrategia avanzada.
+- **Versión iOS o web:** Extender la aplicación a otras plataformas permitiría llegar a jugadores fuera del ecosistema Android.
 
 ---
 
 ## 14. Anexos
 
-> *Sección pendiente de desarrollo.*
+### Diagramas ampliados
+
+#### Diagrama de flujo de navegación
+
+El siguiente diagrama refleja el flujo de navegación completo de la aplicación, exponiendo todas las funcionalidades posibles entre pantallas y las condiciones que las provocan:
+
+```mermaid
+flowchart TD
+    START(["Inicio de la app"]) --> CHECK_SESSION{"¿Sesión activa?"}
+
+    CHECK_SESSION -->|Sí| HOME["PantallaInicio"]
+    CHECK_SESSION -->|No| LOGIN["PantallaLogin"]
+
+    LOGIN -->|Credenciales correctas| HOME
+    LOGIN -->|Sin cuenta| REGISTRO_AUTH["PantallaRegistroAuth"]
+    REGISTRO_AUTH -->|Registro exitoso| HOME
+
+    HOME -->|Ver guía| GUIA["PantallaGuia"]
+    HOME -->|Partida en curso| REGISTRO_JUEGO["PantallaRegistro"]
+    HOME -->|Nueva partida| FORMULARIO["PantallaFormulario"]
+    HOME -->|Cerrar sesión| LOGIN
+    GUIA --> HOME
+    FORMULARIO -->|Partida creada| REGISTRO_JUEGO
+
+    subgraph JUEGO["Zona de juego — Bottom Navigation"]
+        REGISTRO_JUEGO
+        POKEDEX["PantallaPokedex"]
+        DATOS_JUEGO["PantallaDatosJuego"]
+        CHAT_IA["PantallaChat"]
+    end
+
+    REGISTRO_JUEGO <-->|Barra inferior| POKEDEX
+    REGISTRO_JUEGO <-->|Barra inferior| DATOS_JUEGO
+    REGISTRO_JUEGO <-->|Barra inferior| CHAT_IA
+
+    REGISTRO_JUEGO -->|Fin de Locke| ESTADISTICAS["PantallaEstadisticas"]
+    ESTADISTICAS -->|Nueva partida| FORMULARIO
+    ESTADISTICAS -->|Volver al menú| HOME
+```
+
+#### Diagrama de flujo de datos de la partida
+
+Muestra el ciclo de vida del objeto `Partida` desde que el usuario realiza una acción en la interfaz hasta que el cambio queda persistido en Firestore y la UI se actualiza de forma reactiva.
+
+```mermaid
+sequenceDiagram
+    participant UI as UI (Composable)
+    participant VM as ViewModel
+    participant Repo as PartidaRepository
+    participant FS as Cloud Firestore
+
+    UI->>VM: Acción del usuario (captura, combate, evolución...)
+    VM->>VM: Valida y actualiza estado local (StateFlow)
+    VM->>Repo: actualizarEncuentrosYEquipo(partida)
+    Repo->>FS: document.set(partida, MERGE)
+    FS-->>Repo: Éxito / Error
+    Repo-->>VM: Result<Unit>
+    VM->>VM: Actualiza _uiState según resultado
+    VM-->>UI: StateFlow emite nuevo estado
+    UI-->>UI: Recomposición reactiva
+```
+
+#### Estructura de datos en Firestore
+
+El siguiente árbol refleja la jerarquía de colecciones y campos almacenados en Firestore para cada partida de un usuario.
+
+```
+partidas/                                    ← colección raíz
+└── {uid}/                                   ← documento por usuario (Firebase Auth UID)
+    └── partidas/                            ← subcolección de aventuras
+        └── {docId}                          ← documento de la partida activa
+            ├── versionJuego: "Negro" | "Blanco"
+            ├── nombreJugador: String
+            ├── sexoJugador: "Masculino" | "Femenino"
+            ├── pokemonInicial: "Snivy" | "Tepig" | "Oshawott"
+            ├── vidas: Int                   ← empieza en 10; llegar a 0 = fin
+            ├── finDeLocke: Boolean
+            ├── consultasIA: Int
+            ├── createdAt: Timestamp
+            ├── equipo: [ PokemonCapturado ]
+            ├── pc: [ PokemonCapturado ]
+            ├── muertos: [ PokemonCapturado ]
+            │     └── causaMuerte: { tipoEntrenador, movimiento,
+            │                        especieMatadora, fecha, combateId }
+            ├── encuentrosRutas: [ { rutaId, resultado,
+            │                        pokemonCapturadoId } ]
+            └── resultadosCombates: [ { combateId, perdido,
+                                        equipoUsado: [id] } ]
+```
+
+---
+
+### Registros
+
+#### Registro de incidencias y resoluciones
+
+Durante el desarrollo se registraron las siguientes incidencias significativas:
+
+| Incidencia | Causa identificada | Resolución aplicada |
+|------------|-------------------|---------------------|
+| Latencia elevada en respuestas de NuzBot | Modelo de IA gratuito con capacidad limitada y cold starts de Render en plan gratuito | Timeout de Retrofit aumentado a 60s, mostrando en todo momento el indicador de carga |
+| Desincronización del estado del equipo tras una evolución | El ViewModel no refrescaba el `StateFlow` tras actualizar el documento en Firestore | Se forzó una recarga explícita del documento después de cada escritura exitosa |
+| Fallo de exportación PDF en dispositivos con Android 9 | Diferencias en la gestión de permisos de escritura en `Downloads/` según versión de API | Se ajustó el uso de `MediaStore` para garantizar compatibilidad con API 28 y superiores |
+| Crossfade de audio que no se detenía al salir del juego | El `MediaPlayer` no se pausaba correctamente en `onPause` de `MainActivity` | Se vinculó el ciclo de vida del `AudioManager` al `onPause`/`onResume` de la actividad |
 
 ---
 
 ## 15. Índice de tablas e imágenes
 
-> *Sección pendiente de desarrollo.*
+### Tablas
+
+| # | Título | Sección |
+|---|--------|---------|
+| 1 | Análisis comparativo de aplicaciones similares | [1. Introducción](#1-introducción) |
+| 2 | Características principales de la aplicación | [2. Descripción del proyecto](#2-descripción-del-proyecto) |
+| 3 | Especificaciones técnicas | [8. Diseño](#8-diseño) |
+| 4 | Identificación y evaluación de riesgos | [7. Plan de gestión de riesgos](#7-plan-de-gestión-de-riesgos) |
+| 5 | Registro de pruebas por módulo funcional | [10. Documentación de ejecución y plan de calidad](#10-documentación-de-ejecución-y-plan-de-calidad) |
+| 6 | Resultados esperados frente a objetivos | [13. Conclusiones](#13-conclusiones) |
+| 7 | Registro de incidencias y resoluciones | [14. Anexos](#14-anexos) |
+
+### Imágenes y diagramas
+
+| # | Título | Sección |
+|---|--------|---------|
+| 1 | Logo de la aplicación | [Portada](#professional-nuzlocker) |
+| 2 | Diagrama de componentes (Mermaid) | [8. Diseño](#8-diseño) |
+| 3 | Diagrama de casos de uso (Mermaid) | [8. Diseño](#8-diseño) |
+| 4 | Cronograma Gantt (Mermaid) | [6. Planificación del proyecto](#6-planificación-del-proyecto) |
+| 5 | Boceto — Pantalla Datos del Juego | [8. Diseño](#8-diseño) |
+| 6 | Boceto — Pantalla Pokédex | [8. Diseño](#8-diseño) |
+| 7 | Boceto — Pantalla Estadísticas | [8. Diseño](#8-diseño) |
+| 8 | Diagrama de flujo de navegación (Mermaid) | [14. Anexos](#14-anexos) |
+| 9 | Diagrama de flujo de datos de la partida (Mermaid) | [14. Anexos](#14-anexos) |
+| 10 | Árbol de estructura de datos en Firestore | [14. Anexos](#14-anexos) |
 
 ---
 
 ## 16. Bibliografía y referencias
 
-> *Sección pendiente de desarrollo.*
+### Documentación técnica oficial
+
+- **Android Developers — Jetpack Compose:** Documentación oficial del framework de UI declarativo utilizado para toda la interfaz de la aplicación. [developer.android.com/compose](https://developer.android.com/compose)
+- **Android Developers — Navigation Component:** Guía de implementación del sistema de navegación con Jetpack Navigation Compose. [developer.android.com/guide/navigation](https://developer.android.com/guide/navigation)
+- **Android Developers — ViewModel y Architecture Components:** Referencia de la arquitectura MVVM y la clase `ViewModel`. [developer.android.com/topic/libraries/architecture/viewmodel](https://developer.android.com/topic/libraries/architecture/viewmodel)
+- **Firebase Documentation — Authentication:** Guía de integración de Firebase Authentication con Android para autenticación con correo y contraseña. [firebase.google.com/docs/auth/android/password-auth](https://firebase.google.com/docs/auth/android/password-auth)
+- **Firebase Documentation — Cloud Firestore:** Referencia de operaciones de lectura, escritura y escucha en tiempo real con Firestore. [firebase.google.com/docs/firestore](https://firebase.google.com/docs/firestore)
+- **Retrofit — Square:** Documentación del cliente HTTP type-safe utilizado para el consumo de la API REST de NuzBot. [square.github.io/retrofit](https://square.github.io/retrofit/)
+
+### Herramientas y servicios externos
+
+- **Material Design 3 — Google:** Directrices de diseño visual aplicadas en la paleta de colores, tipografía y componentes de la interfaz. [m3.material.io](https://m3.material.io)
+- **OpenRouter:** Referencia del servicio de enrutamiento de modelos de lenguaje utilizado para el backend de NuzBot. [openrouter.ai/docs](https://openrouter.ai/docs)
+- **Render:** Guía de despliegue del backend REST en la plataforma cloud utilizada para alojar el servicio de NuzBot. [render.com/docs](https://render.com/docs)
+
+### Fuentes de datos del juego
+
+- **Wikidex:** Fuente fundamental y principal para poder observar todos los combates importantes de la generación. [Wikidex](https://www.wikidex.net/wiki/WikiDex)
+- **Serebii.net:** Fuente de consulta complementaria para datos de Pokémon de quinta generación, estadísticas base y movimientos. [serebii.net](https://serebii.net)
+- **Pokémon Negro/Blanco — Nintendo DS, 2010 — Nintendo / Game Freak / The Pokémon Company:** Los juegos originales sobre cuyo dominio se construye la aplicación.
+
