@@ -843,6 +843,6 @@ Durante el desarrollo se registraron las siguientes incidencias significativas:
 ### Fuentes de datos del juego
 
 - **Wikidex:** Fuente fundamental y principal para poder observar todos los combates importantes de la generación. [Wikidex](https://www.wikidex.net/wiki/WikiDex)
-- **Serebii.net:** Fuente de consulta complementaria para datos de Pokémon de quinta generación, estadísticas base y movimientos. [serebii.net](https://serebii.net)
+- **Serebii.net:** Fuente de consulta complementaria para datos de Pokémon de quinta generación, tipos, dónde encontrarlos, evoluciones, etc. [serebii.net](https://serebii.net)
 - **Pokémon Negro/Blanco — Nintendo DS, 2010 — Nintendo / Game Freak / The Pokémon Company:** Los juegos originales sobre cuyo dominio se construye la aplicación.
 
