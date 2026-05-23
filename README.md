@@ -814,9 +814,9 @@ Durante el desarrollo se registraron las siguientes incidencias significativas:
 | 2 | Diagrama de componentes (Mermaid) | [8. Diseño](#8-diseño) |
 | 3 | Diagrama de casos de uso (Mermaid) | [8. Diseño](#8-diseño) |
 | 4 | Cronograma Gantt (Mermaid) | [6. Planificación del proyecto](#6-planificación-del-proyecto) |
-| 5 | Boceto — Pantalla Datos del Juego | [8. Diseño](#8-diseño) |
-| 6 | Boceto — Pantalla Pokédex | [8. Diseño](#8-diseño) |
-| 7 | Boceto — Pantalla Estadísticas | [8. Diseño](#8-diseño) |
+| 5 | Boceto/Resultado Pantalla Datos del Juego | [8. Diseño](#8-diseño) |
+| 6 | Boceto/Resultado Pantalla Pokédex | [8. Diseño](#8-diseño) |
+| 7 | Boceto/Resultado Pantalla Estadísticas | [8. Diseño](#8-diseño) |
 | 8 | Diagrama de flujo de navegación (Mermaid) | [14. Anexos](#14-anexos) |
 | 9 | Diagrama de flujo de datos de la partida (Mermaid) | [14. Anexos](#14-anexos) |
 | 10 | Árbol de estructura de datos en Firestore | [14. Anexos](#14-anexos) |
