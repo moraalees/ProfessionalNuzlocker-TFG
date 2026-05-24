@@ -70,9 +70,9 @@ Ninguna solución existente combina un seguimiento completo del Nuzlocke cómodo
 
 En el proyecto se integran dos tendencias tecnológicas actuales:
 
-- **Integración de IA en aplicaciones móviles:** El uso de la IA en diferentes aplicaciones se ha visto muy impulsado recientemente. Esto es evident al verse integradas en aplicaciones de Google (Gmail, Google Docs, Google Sheets, etc.), que emplean IA para ayudar al usuarioa entender mejor el contexto y moverse mejor por el entorno de la aplicación. Sobre esto, Professional Nuzlocker aprovecha esta tecnología para ofrecer respuestas específicas y servibles a momentos o decisiones importantes en las partida del jugador.
+- **Integración de IA en aplicaciones móviles:** Integrar IA directamente en apps de consumo es cada vez más habitual, solo basta con ver lo que Google ha hecho con Gmail, Docs o Sheets. En Professional Nuzlocker, NuzBot recibe el contexto real de la partida del jugador y responde en función de lo que está pasando en ella, no con información genérica.
 
-- **Desarrollo Android con Jetpack Compose:** La interfaz de Jetpack Compose es uno de los estándares más novedosos y de los mejores para el desarrollo nativo de aplicaciones Android, permitiendo la creación de interfaces dinámicas y estilizadas utilizando poco código. Además, su avance por las arquitecturas modernas de Android permite una rápida evolución del software y mayor eficiencia en el mantenimiento a gran escala, requisito muy clave a la hora de escoger interfaces para proyectos grandes y/o largos.
+- **Desarrollo Android con Jetpack Compose:** Jetpack Compose es el estándar actual de UI nativa en Android. Frente al XML tradicional, el código queda bastante más compacto y su integración con ViewModel y corrutinas hace que escalar o modificar partes del proyecto no sea un dolor de cabeza.
 
 ---
 
@@ -155,7 +155,7 @@ Desarrollar una aplicación Android completa que permita al usuario **registrar,
 
 ### Qué incluye
 
-Professional Nuzlocker cubre el ciclo completo de una partida Nuzlocke sobre Pokémon Negro/Blanco, desde el registro del usuario hasta la exportación en formato PDF de las estadísticas más importantes de la partida. Esto incluye la autenticación, la configuración de la partida, el registro de rutas y encuentros, la gestión del equipo activo, el manejo de PC y cementerio, el seguimiento de combates importantes, el sistema de vidas con fin automático al llegar a cero, el asistente de IA, las estadísticas finales, la exportación a PDF, una Pokédex completa de los Pokémon del juego, música de fondo con fundido cruzado y efectos de sonido, y una pantalla de guía para jugadores nuevos en el modo Nuzlocke.
+Professional Nuzlocker cubre el ciclo completo de una partida Nuzlocke sobre Pokémon Negro/Blanco, desde el registro del usuario hasta la exportación en PDF. Incluye autenticación, configuración de partida, registro de rutas y encuentros, gestión del equipo activo, PC y cementerio, seguimiento de combates importantes, sistema de vidas con fin automático, asistente IA, estadísticas finales, Pokédex completa, música con fundido cruzado, efectos de sonido y una pantalla de guía para jugadores nuevos.
 
 ### Límites
 
@@ -499,7 +499,7 @@ El backend de NuzBot ya está desplegado en Render y no requiere ninguna configu
 
 El proyecto utiliza Git con un repositorio remoto en GitHub. Al ser un proyecto individual, el flujo de trabajo es sencillo y directo, ya que se trabaja siempre sobre la rama `main`, sin ramas de feature ni pull requests. Los cambios se confirman con commits cortos que reflejan qué se ha modificado o añadido.
 
-En un contexto de equipo, lo recomendable sería adoptar un flujo basado en ramas, como un modelo más ligero con una rama por funcionalidad (`feature/nombre`) que se integra en `main` mediante PRs (pull requests), con al menos una revisión de otro miembro antes de hacer el merge, permitiendo aislar cambios, detectar conflictos antes de que lleguen a la rama principal y mantener un historial más claro.
+En un contexto de equipo, lo recomendable sería trabajar con una rama por funcionalidad (`feature/nombre`) que se integre en `main` mediante PRs con al menos una revisión antes del merge. Así es más fácil aislar cambios y detectar conflictos antes de que lleguen a producción.
 
 ### Procedimientos para registrar las incidencias
 
@@ -513,13 +513,13 @@ En un entorno de equipo, lo adecuado sería utilizar GitHub Issues, para registr
 
 ### Procedimientos operativos
 
-Cuando se despliega la aplicación, Android inicializa el grafo de dependencias de Compose y vuelve a usar la sesión activa (si hay) de Firebase Authentication. Si el usuario ya tiene sesión activa, se navega directamente a `PantallaInicio`, donde se consulta Firestore para determinar si existe una partida en curso. Si es así, el jugador accede a dicha pantalla. En caso contrario, aparecerá en `PantallaLogin` para que o bien inicie su sesión o bien cree una cuenta.
+Al abrir la app, Android comprueba si hay sesión activa en Firebase. Si la hay, va directamente a `PantallaInicio`, donde se consulta Firestore para ver si existe una partida en curso. Si hay partida, el jugador entra a ella. Si no, aparece en `PantallaLogin` para iniciar sesión o crear una cuenta.
 
-Durante el ciclo de vida de la aplicación, cada pantalla delega su estado en un ViewModel propio (si tiene) que expone `StateFlow`. Cuando el usuario realiza una acción, el ViewModel actualiza el estado local para mantener la interfaz reactiva y propaga el cambio a Firestore mediante una corrutina. Si la operación en la nube falla, el error se notifica al usuario mediante un mensaje visible en pantalla, sin revertir el estado local.
+Cada pantalla delega su estado en un ViewModel propio que expone un `StateFlow`. Cuando el usuario hace algo, el ViewModel actualiza el estado local y propaga el cambio a Firestore en una corrutina. Si la escritura falla, se muestra un mensaje de error en pantalla sin revertir el estado local.
 
-El sistema de audio funciona de forma independiente a la navegación. `AudioManager` gestiona dos `MediaPlayer` con fundido cruzado de 1 segundo al pasar de la música de exploración a la música de combate, y viceversa. Los efectos de sonido suaves, como el clic, subida de nivel y captura, se reproducen mediante `SoundPool`. Durante una captura, el volumen de la música de fondo se reduce temporalmente 2,5 segundos. El usuario puede alternar el sonido entre silenciado y activo desde un botón en la esquina superior derecha de `PantallaInicio`. El estado de mute se mantiene en memoria durante la sesión y se restablece al reiniciar la aplicación.
+El audio funciona de forma independiente a la navegación. `AudioManager` gestiona dos `MediaPlayer` con fundido cruzado de 1 segundo al pasar entre música de exploración y música de combate. Los efectos de sonido (clic, subida de nivel, captura) van por `SoundPool`. Durante una captura, el volumen baja 2,5 segundos. El botón de mute está en la esquina superior derecha de `PantallaInicio` y su estado se mantiene en memoria durante la sesión.
 
-La exportación a PDF se lanza desde un botón visible en la última fase de `PantallaEstadisticas`, el resumen final. El documento se construye con las estadísticas calculadas por el ViewModel y se guarda en la carpeta `Downloads/` del dispositivo con el nombre `resumen_aventura.pdf`. Una vez completada la escritura, se muestra un `Toast` con el texto "PDF guardado en Descargas".
+La exportación a PDF se lanza desde un botón en la última fase de `PantallaEstadisticas`. El documento se guarda en `Downloads/` como `resumen_aventura.pdf` y al terminar aparece un `Toast` confirmándolo.
 
 
 ### Registro de pruebas
@@ -560,29 +560,25 @@ Las pruebas del proyecto son de tipo manual, debido a la sencillez de estas. Est
 
 ### Indicadores de calidad
 
-Los siguientes criterios han guiado la evaluación de la calidad del producto a lo largo del desarrollo:
+**Estabilidad:** No hubo ningún crash no controlado durante las pruebas en dispositivo físico. Los errores esperables (sin conexión, backend sin respuesta) están manejados con mensajes visibles al usuario.
 
-**Estabilidad:** La aplicación no debe presentar cierres inesperados durante el uso común. Todos los flujos principales han sido ejecutados repetidamente en dispositivo físico sin producir ningún crash no controlado. Los errores esperables, como la ausencia de conexión o la falta de respuesta del backend, están manejados y controlados con mensajes de error visibles al usuario.
+**Consistencia de datos:** Se comprobó que tras cada captura, muerte, evolución o fin de partida, lo que muestra la interfaz y lo que está en Firestore coincide.
 
-**Consistencia de datos:** Toda acción que modifique el estado de la partida debe reflejarse de forma coherente en Firestore y en la interfaz. Se ha verificado que no existen diferencias entre el estado mostrado en pantalla y el almacenado en la base de datos tras operaciones de captura, muerte, evolución o fin de partida.
+**Persistencia entre sesiones:** Los datos de la partida sobreviven al cerrar y reabrir la aplicación.
 
-**Persistencia entre sesiones:** Los datos de la partida sobreviven al cierre y reapertura de la aplicación.
+**Tiempo de respuesta de NuzBot:** El indicador de carga aparece mientras espera y desaparece al recibir la respuesta. El tiempo es razonable bajo condiciones normales de red.
 
-**Tiempo de respuesta de NuzBot:** Las respuestas del asistente se obtienen en un tiempo razonable bajo condiciones normales de red. El indicador de carga permanece visible durante la espera y desaparece al recibir la respuesta.
-
-**Corrección del PDF generado:** El archivo exportado debe contener los datos de la partida de forma ordenada y sin errores visuales de organización, abrirse correctamente con el visor de PDF del dispositivo y guardarse en la ruta esperada.
+**Corrección del PDF generado:** El archivo exportado tiene todos los datos ordenados, se abre correctamente en el visor del dispositivo y se guarda en la ruta esperada.
 
 ### Métodos de verificación
 
-La verificación del correcto funcionamiento de la aplicación se ha llevado a cabo mediante los siguientes métodos:
+**Prueba en dispositivo físico:** El método principal. Se recorrieron todos los flujos completos en un Android real a lo largo de todo el desarrollo, no solo al final.
 
-**Prueba en dispositivo físico:** El método principal de verificación ha sido ejecutar la aplicación en un dispositivo Android real, recorriendo los flujos completos de uso y comprobando visualmente el comportamiento esperado en cada momento. Estas comprobaciones se han realizado sobre todo a lo largo de la creación del proyecto.
+**Consola de Firebase:** Tras cada escritura en Firestore, se revisó directamente el documento en la consola para confirmar que los datos son los correctos. Útil para pillar discrepancias entre lo que muestra la UI y lo que se guardó realmente.
 
-**Inspección de la consola de Firebase:** Tras cada operación que implique escritura en Firestore, se ha verificado directamente en la consola de Firebase que el documento correspondiente contiene los datos correctos. Esto permite detectar cualquier error de información que no sea exacta entre lo que muestra la interfaz y lo que realmente se ha persistido.
+**Logcat de Android Studio:** Con el dispositivo conectado, se monitorearon los logs para cazar excepciones, warnings de Compose y errores de red. Cada error detectado se corrigió en el momento.
 
-**Logcat de Android Studio:** Durante las sesiones de prueba con dispositivo conectado, se ha monitoreado el canal de logs de Android Studio para identificar excepciones, advertencias de Compose y errores de red. Los errores detectados se han corregido en el momento que se ha averiguado la solución a ellos.
-
-**Revisión del archivo PDF generado:** Cada prueba de exportación ha concluido con la apertura del archivo resultante en el visor de PDF del dispositivo, verificando visualmente la presencia e integridad de todos los bloques de contenido esperados.
+**Revisión del PDF generado:** Cada prueba de exportación acabó abriendo el archivo en el visor del dispositivo y comprobando que todos los bloques de contenido estaban bien.
 
 ---
 
@@ -590,33 +586,29 @@ La verificación del correcto funcionamiento de la aplicación se ha llevado a c
 
 ### Tecnología de distribución
 
-Professional Nuzlocker se distribuye como un archivo APK generado directamente desde Android Studio mediante el proceso de compilación del IDE. No se utiliza Google Play Store como canal de distribución ni ningún tipo de sitio de venta online, principalmente debido a las restricciones de propiedad intelectual de Nintendo y The Pokémon Company, que hacen poco porbable la publicación comercial o pública de una aplicación que usa sus datos propios sin autorización expresa, contando también porque es un proyecto sin ánimo de lucro.
+Professional Nuzlocker se distribuye como APK generado desde Android Studio. No está en Google Play, principalmente por las restricciones de propiedad intelectual de Nintendo y The Pokémon Company — publicar una app que usa sus datos sin licencia expresa no es viable, y además es un proyecto sin ánimo de lucro.
 
-El APK se firma digitalmente con un keystore propio generado en Android Studio antes de la compilación, lo que garantiza la integridad del paquete y permite actualizaciones sucesivas sobre el mismo dispositivo sin necesidad de desinstalar la versión anterior. Durante la compilación en modo release, el compilador R8 aplica reducción de código y ofuscación de nombres de clase, lo que reduce el tamaño del APK y dificulta la ingeniería inversa del código fuente. Esto es una función propia del IDE.
+El APK se firma con un keystore propio antes de compilar, lo que garantiza la integridad del paquete y permite actualizaciones sin desinstalar. En modo release, R8 aplica reducción de código y ofuscación de clases, reduciendo el tamaño del APK y dificultando la ingeniería inversa. Esto lo hace el IDE solo.
 
-El repositorio del proyecto está alojado en GitHub de forma pública, lo que permite acceder al código fuente completo, sin observar, como es evidente, cualquier dato sensible como la configuración de Firebase. Los archivos APK del proyecto pueden adjuntarse como assets de una GitHub Release, ofreciendo una URL de descarga directa y un historial de versiones claro vinculado a commits concretos.
+El código fuente está en GitHub de forma pública. No está incluido ningún dato sensible como la configuración de Firebase. Los APK pueden subirse como assets de una GitHub Release para ofrecer descarga directa vinculada a un commit concreto.
 
-El backend de NuzBot está desplegado de forma permanente en Render, plataforma de hosting en la nube que proporciona un entorno de ejecución continuo sin coste para proyectos de poca demanda. La URL del endpoint es fija y está embebida en la configuración de Retrofit de la aplicación, por lo que no requiere ningún ajuste por parte del usuario final.
+El backend de NuzBot está desplegado en Render sin coste. La URL del endpoint está embebida en la configuración de Retrofit, así que el usuario final no tiene que configurar nada.
 
 ### Descripción del proceso
 
-El proceso de distribución de una nueva versión de la aplicación sigue los pasos descritos a continuación:
+Primero se verifica que `main` es estable y todo lo previsto está hecho. Luego, en Android Studio: *Build → Generate Signed Bundle / APK*, se selecciona APK, se proporciona el keystore con sus credenciales, se elige la variante `release` y se compila.
 
-En primer lugar, se verifica que el código en la rama `main` es estable y que todas las funcionalidades previstas para la versión están completas y probadas. Seguidamente, se abre Android Studio y se accede al menú *Build → Generate Signed Bundle / APK*. Se selecciona la opción APK, se proporciona el keystore del proyecto junto con sus credenciales, se elige la variante `release` y se inicia la compilación.
+El APK firmado queda en `app/release/app-release.apk`. A partir de ahí hay dos opciones para distribuirlo:
+- **Transferencia directa:** copiar el APK al dispositivo por USB o cualquier otro medio, localizarlo con el explorador y ejecutarlo. Android pedirá habilitar instalación desde orígenes desconocidos si no está activado.
+- **GitHub Release:** crear una release asociada al commit correspondiente, adjuntar el APK como asset y añadir las notas de versión. Cualquiera con acceso al repositorio puede descargarlo desde esa URL.
 
-Una vez concluida la compilación, Android Studio deposita el APK firmado en la ruta `app/release/app-release.apk` dentro del directorio del proyecto. Este archivo es el artefacto final listo para instalar.
-
-Para la distribución del APK existen dos vías:
-- Transferencia direcata. Simplemente copiar el archivo al dispositivo mediante cable USB o por cualquier medio de transferencia de archivos, abrir el explorador del dispositivo, localizar el APK y ejecutarlo. El sistema Android solicitará al usuario que habilite la instalación de aplicaciones de orígenes desconocidos si no lo tiene activado previamente.
-- GitHub Release. Consiste llanamente en crear una nueva release en el repositorio de GitHub asociada al commit correspondiente, adjuntar el APK como asset y proporcionar las notas de versión pertinentes. Cualquier persona con acceso al repositorio podrá descargar e instalar el archivo desde esa URL.
-
-El backend de NuzBot no requiere un proceso de distribución propio en el contexto de este proyecto, ya que el despliegue en Render es continuo y cualquier actualización del código del repositorio del backend se propaga automáticamente al entorno en producción mediante el pipeline de integración de la plataforma.
+El backend de NuzBot no necesita proceso de distribución propio: Render despliega automáticamente cualquier actualización del repositorio del backend.
 
 ---
 
 ## 12. Manuales
 
-Para poder entender el flujo de lógica y pantallas desde un punto de vista no profesional para usar la aplicación desde su instalación hasta su final, se ha creado el siguiente [`Manual de Usuario`](info/manual_usuario.md). Este manual contiene una guía para poder instalar el proyecto y cómo usarlo de forma eficaz sin problemas.
+Para entender cómo usar la aplicación desde su instalación hasta el final de una partida, está disponible el [`Manual de Usuario`](info/manual_usuario.md), con instrucciones claras para cualquier perfil de usuario.
 
 ---
 
@@ -624,18 +616,18 @@ Para poder entender el flujo de lógica y pantallas desde un punto de vista no p
 
 ### Informe final
 
-Professional Nuzlocker cumple con casi todos los objetivos establecidos al inicio del desarrollo del proyecto. La aplicación cumple correctamente con el ciclo completo de una partida Nuzlocke sobre Pokémon Negro/Blanco, ya que va desde el registro del usuario hasta la exportación del informe final en PDF, con persistencia en la nube, integración de un asistente de IA contextual y una interfaz coherente y pulida, como se especificó.
+Professional Nuzlocker cumple con casi todos los objetivos establecidos al inicio. La aplicación cubre el ciclo completo: desde el registro del usuario hasta la exportación del informe en PDF, con persistencia en la nube y un asistente IA con contexto real de la partida.
 
-Sin embargo, se planeaba desarrollar un backend funcional, para la integración de IA, empleando RAG (Retrieval Augmented Generation). En el presente proyecto, este backend no emplea este sistema, por motivos de poca experiencia en ello y tiempo.
+Sin embargo, se planeaba desarrollar el backend de IA con RAG (Retrieval Augmented Generation). Finalmente no se implementó por falta de experiencia en ese campo y por tiempo.
 
-El desarrollo se llevó a cabo en catorce semanas por un único desarrollador, siguiendo el cronograma anteriormente detallado. El alcance definido desde el inicio no ha sido el definitivo, ya que varias decisiones lógicas han sido cambiadas por diversos motivos en cada caso:
+El desarrollo duró catorce semanas en solitario y el alcance inicial sufrió algunos ajustes lógicos a lo largo del camino:
 
-- Presencia de 3 partidas. En un principio, se planeaba permitir 3 partidas por jugador/cuenta. No obstante, esta funcionalidad se ha declarado como innecesaria. Con el fin de que el jugador viva de más cerca sus partidas, es mejor que se centre en una sola, en lugar de permitirle llevar 3 a la vez. Si este desea hacer más de 1, podría crearse otra cuenta.
-- RAG. Como se ha especificado anteriormente, este sistema para el backend se ha descartado al ser una idea muy grande ppara ser llevada por una experiencia muy básica en backends de IA.
+- **Presencia de 3 partidas.** Al principio se planeaba permitir 3 partidas por cuenta. Se descartó porque no tiene mucho sentido llevar varias a la vez — es mejor que el jugador se centre en una. Si quiere más de una, puede crear otra cuenta.
+- **RAG.** Como ya se explicó, demasiado grande para la experiencia que tenía en backends de IA.
 
-Desde un punto de vista ya técnico, el proyecto ha servido con creces como aplicación práctica de un stack Android moderno, el cuál se compone por MVVM con Jetpack Compose, Firebase como backend completo y consumo de una API REST externa autenticada. El resultado es una arquitectura limpia, mantenible y escalable en la que la separación de capas permite poder expandir funcionalidades o modificar algunas ya existentes sin perjudicar al resto.
+Técnicamente, el proyecto ha sido una buena excusa para aplicar MVVM con Jetpack Compose de forma real, con Firebase de backend y un endpoint REST externo autenticado. La separación en capas hace que sea fácil expandir o modificar partes sin afectar al resto.
 
-A un nivel más personal, el proyecto ha servido como una experiencia satisfactoria que mezcla motivación y aprendizaje. Desarrollar una herramienta que ayuda y resuelve un dilema real dentro de una afición personal ha ayudado a mantener el interés a lo largo de todo el proceso, y el resultado final es una aplicación que yo mismo usaré durante una partida en algún punto de mi vida.
+A nivel personal, mezclar motivación y aprendizaje funcionó bien. Desarrollar algo que resuelve un problema real dentro de una afición ayuda bastante a no perder el hilo, y el resultado es una aplicación que yo mismo usaré en algún momento.
 
 ---
 
@@ -660,17 +652,17 @@ Todos los objetivos definidos en la [sección 3](#3-objetivos-del-proyecto) han 
 
 ### Viabilidad del proyecto
 
-Professional Nuzlocker demuestra su viabilidad técnica y funcional como proyecto de desarrollo individual. Los recursos tecnológicos utilizados son todos gratuitos en su nivel básico, lo que permite mantener la aplicación en producción sin siquiera coste alguno.
+El proyecto funciona y se sostiene solo sin coste: Firebase, Render y OpenRouter tienen planes gratuitos suficientes para esto.
 
-En cuanto a la viabilidad como producto, la aplicación cubre una necesidad personal y real que no cubre actualmente ninguna herramienta existente. Sin embargo, su proyección comercial no está prevista por las restricciones de propiedad intelectual de Nintendo y The Pokémon Company, que hacen inviable una distribución pública a gran escala sin un acuerdo de licencia expreso, tal como se recoge en la [sección 4](#4-alcance-del-proyecto).
+Como producto, cubre un hueco real — no existe ninguna herramienta móvil equivalente para este tipo de reto. El problema es la propiedad intelectual de Nintendo y The Pokémon Company, que hace inviable distribuirlo públicamente a gran escala sin licencia expresa, tal como se recoge en la [sección 4](#4-alcance-del-proyecto).
 
-Si el proyecto evolucionara hacia una versión con datos propioso tergiversados, su viabilidad de distribución mejoraría de forma significativa. En su estado actual, es una herramienta completamente funcional para uso personal y de comunidad.
+Si el proyecto evolucionara con datos y nombres propios, la distribución dejaría de ser un problema. En su estado actual, es perfectamente funcional para uso personal y de comunidad.
 
 ---
 
 ### Mejoras futuras
 
-Las siguientes mejoras representan extensiones naturales del proyecto que no entraron en el alcance inicial por restricciones de tiempo o presupuesto:
+Estas son las cosas que quedaron fuera, principalmente por tiempo o presupuesto:
 
 - **Soporte para más generaciones de Pokémon:** Ampliar la cobertura a otros juegos de la saga añadiendo sus respectivas rutas, combates y Pokédex.
 - **Reglas Nuzlocke personalizables:** Permitir al jugador definir sus propias reglas (número de vidas, *Species Clause*, *Sleep Clause*, etc.) haría la aplicación más flexible.
@@ -678,7 +670,7 @@ Las siguientes mejoras representan extensiones naturales del proyecto que no ent
 - **Exportación PDF mejorada:** Incorporar imágenes de los Pokémon del equipo final y un diseño más elaborado en el documento generado.
 - **Historial de partidas:** Permitir al usuario revisar sus Nuzlockes anteriores y comparar estadísticas entre ellos.
 - **Modo sin conexión:** Implementar una caché local con Room para registrar rutas y capturas sin conexión, sincronizando con Firestore al recuperarla.
-- **Modelo de IA más potente:** Sustituir el modelo gratuito de OpenRouter por uno comercial mejoraría con grandes creces la calidad y precisión de las respuestas de NuzBot, especialmente en consultas sobre estrategia avanzada.
+- **Modelo de IA más potente:** Cambiar el modelo gratuito de OpenRouter por uno de pago mejoraría bastante la calidad de las respuestas de NuzBot, especialmente en consultas de estrategia avanzada.
 - **Versión iOS o web:** Extender la aplicación a otras plataformas permitiría llegar a jugadores fuera del ecosistema Android.
 
 ---
