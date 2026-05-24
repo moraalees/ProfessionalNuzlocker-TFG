@@ -10,9 +10,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.professionalnuzlocker.data.model.enum_classes.RutasNavegacion
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.professionalnuzlocker.ui.screens.auth.PantallaLogin
 import com.example.professionalnuzlocker.ui.screens.auth.PantallaRegistroAuth
 import com.example.professionalnuzlocker.ui.screens.chat.PantallaChat
+import com.example.professionalnuzlocker.ui.screens.chat.PantallaChatViewModel
 import com.example.professionalnuzlocker.ui.screens.form.PantallaFormulario
 import com.example.professionalnuzlocker.ui.screens.guide.PantallaGuia
 import com.example.professionalnuzlocker.ui.screens.home.PantallaInicio
@@ -36,6 +38,7 @@ import com.google.firebase.auth.FirebaseAuth
  */
 @Composable
 fun NavegadorPrincipal(audioManager: AudioManager) {
+    val chatViewModel: PantallaChatViewModel = viewModel()
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val rutaActual = navBackStackEntry?.destination?.route
@@ -136,7 +139,7 @@ fun NavegadorPrincipal(audioManager: AudioManager) {
                 PantallaDatosJuego(audioManager = audioManager)
             }
             composable(RutasNavegacion.CHAT_IA.nombre) {
-                PantallaChat()
+                PantallaChat(viewModel = chatViewModel)
             }
         }
     }

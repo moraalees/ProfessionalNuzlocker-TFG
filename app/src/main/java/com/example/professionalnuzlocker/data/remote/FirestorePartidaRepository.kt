@@ -21,8 +21,21 @@ import kotlin.coroutines.resume
  * Principales operaciones: guardar/cargar/borrar partida, actualizar encuentros y equipo
  * tras registrar un encuentro, actualizar combates tras pelear, marcar fin de Nuzlocke
  * e incrementar el contador de consultas a la IA.
+ *
+ * Incluye una caché en memoria ([cachedId]/[cachedPartida]) para evitar llamadas
+ * redundantes a Firestore al cambiar de pestaña. Se invalida automáticamente en cada escritura.
  */
 class FirestorePartidaRepository: PartidaRepository {
+
+    companion object {
+        @Volatile private var cachedId: String? = null
+        @Volatile private var cachedPartida: Partida? = null
+
+        fun invalidarCache() {
+            cachedId = null
+            cachedPartida = null
+        }
+    }
     private val baseDatos = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
 
@@ -34,6 +47,7 @@ class FirestorePartidaRepository: PartidaRepository {
 
     /** Crea un documento nuevo para la partida en Firestore y devuelve el ID generado. Añade el timestamp de creación automáticamente. */
     override suspend fun guardarPartida(partida: Partida): Result<String> {
+        invalidarCache()
         return try {
             val partidaAGuardar = partida.copy(createdAt = Timestamp.now())
 
@@ -76,6 +90,7 @@ class FirestorePartidaRepository: PartidaRepository {
 
     /** Elimina en batch todas las partidas del usuario. */
     override suspend fun borrarPartidas(): Result<Unit> {
+        invalidarCache()
         return try {
             suspendCancellableCoroutine { cont ->
                 userCol()
@@ -106,8 +121,13 @@ class FirestorePartidaRepository: PartidaRepository {
         }
     }
 
-    /** Carga la primera partida encontrada y la deserializa asegurando que todas las listas sean mutables. */
+    /** Carga la primera partida encontrada y la deserializa asegurando que todas las listas sean mutables.
+     *  Devuelve el resultado desde caché si está disponible, evitando lecturas redundantes a Firestore. */
     override suspend fun cargarPartida(): Result<Pair<String, Partida>> {
+        val id = cachedId
+        val cached = cachedPartida
+        if (id != null && cached != null) return Result.success(Pair(id, cached))
+
         return try {
             suspendCancellableCoroutine { cont ->
                 userCol()
@@ -126,6 +146,8 @@ class FirestorePartidaRepository: PartidaRepository {
                                     medallas = partida.medallas.toMutableList(),
                                     resultadosCombates = partida.resultadosCombates.toMutableList()
                                 )
+                                cachedId = doc.id
+                                cachedPartida = partidaMutable
                                 cont.resume(Result.success(Pair(doc.id, partidaMutable)))
                             } else {
                                 cont.resume(Result.failure(Exception("Error al deserializar la partida")))
@@ -154,6 +176,7 @@ class FirestorePartidaRepository: PartidaRepository {
         muertos: List<PokemonCapturado>,
         vidas: Int
     ): Result<Unit> {
+        invalidarCache()
         return try {
             suspendCancellableCoroutine { cont ->
                 userCol().document(docId)
@@ -184,6 +207,7 @@ class FirestorePartidaRepository: PartidaRepository {
         muertos: List<PokemonCapturado>,
         vidas: Int
     ): Result<Unit> {
+        invalidarCache()
         return try {
             suspendCancellableCoroutine { cont ->
                 userCol().document(docId)
@@ -207,6 +231,7 @@ class FirestorePartidaRepository: PartidaRepository {
 
     /** Marca la partida como finalizada poniendo finDeLocke a true. */
     override suspend fun marcarFinDeLocke(docId: String): Result<Unit> {
+        invalidarCache()
         return try {
             suspendCancellableCoroutine { cont ->
                 userCol().document(docId)

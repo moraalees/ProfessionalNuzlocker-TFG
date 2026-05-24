@@ -21,9 +21,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
@@ -59,8 +63,7 @@ import com.example.professionalnuzlocker.ui.theme.ColorRojoVibrante
  * el indicador [NuzBotPensando]. Los mensajes se gestionan en [PantallaChatViewModel].
  */
 @Composable
-fun PantallaChat() {
-    val viewModel: PantallaChatViewModel = viewModel()
+fun PantallaChat(viewModel: PantallaChatViewModel = viewModel()) {
     var inputTexto by remember { mutableStateOf("") }
     val listState = rememberLazyListState()
     val fondo = Brush.verticalGradient(listOf(ColorOscuro, ColorOscuro, ColorRojo))
@@ -103,21 +106,40 @@ fun PantallaChat() {
 
             else -> {
                 Column(modifier = Modifier.fillMaxSize()) {
-                    Column(
-                        modifier = Modifier.padding(horizontal = 20.dp, vertical = 14.dp)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 20.dp, vertical = 14.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = "NUZBOT",
-                            fontWeight = FontWeight.Black,
-                            letterSpacing = 1.5.sp,
-                            fontSize = 32.sp,
-                            color = ColorRojo
-                        )
-                        Text(
-                            text = "Asistente IA para tu Nuzlocke",
-                            color = ColorClaro.copy(alpha = 0.45f),
-                            fontSize = 13.sp
-                        )
+                        Column {
+                            Text(
+                                text = "NUZBOT",
+                                fontWeight = FontWeight.Black,
+                                letterSpacing = 1.5.sp,
+                                fontSize = 32.sp,
+                                color = ColorRojo
+                            )
+                            Text(
+                                text = "Asistente IA para tu Nuzlocke",
+                                color = ColorClaro.copy(alpha = 0.45f),
+                                fontSize = 13.sp
+                            )
+                        }
+                        IconButton(
+                            onClick = { viewModel.limpiarConversacion() },
+                            enabled = viewModel.mensajes.isNotEmpty() && !viewModel.cargando
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = "Borrar conversación",
+                                tint = if (viewModel.mensajes.isNotEmpty() && !viewModel.cargando)
+                                    ColorClaro.copy(alpha = 0.55f)
+                                else
+                                    ColorClaro.copy(alpha = 0.15f)
+                            )
+                        }
                     }
 
                     LazyColumn(

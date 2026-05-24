@@ -51,6 +51,12 @@ class PantallaChatViewModel : ViewModel() {
         }
     }
 
+    /** Vacía el historial de mensajes iniciando una nueva conversación con NuzBot. */
+    fun limpiarConversacion() {
+        mensajes = listOf()
+        error = null
+    }
+
     /** Envía [texto] a NuzBot, añade las burbujas de usuario y bot al historial y persiste el contador de consultas. */
     fun enviarMensaje(texto: String) {
         val docId = partidaId ?: return
