@@ -22,14 +22,15 @@
 | 6 | [Planificación del proyecto](#6-planificación-del-proyecto) |
 | 7 | [Plan de gestión de riesgos](#7-plan-de-gestión-de-riesgos) |
 | 8 | [Diseño](#8-diseño) |
-| 9 | [Instalación y preparación](#9-instalación-y-preparación) |
-| 10 | [Documentación de ejecución y plan de calidad](#10-documentación-de-ejecución-y-plan-de-calidad) |
-| 11 | [Distribución](#11-distribución) |
-| 12 | [Manuales](#12-manuales) |
-| 13 | [Conclusiones](#13-conclusiones) |
-| 14 | [Anexos](#14-anexos) |
-| 15 | [Índice de tablas e imágenes](#15-índice-de-tablas-e-imágenes) |
-| 16 | [Bibliografía y referencias](#16-bibliografía-y-referencias) |
+| 9 | [Estructura de clases del proyecto](#9-estructura-de-clases-del-proyecto) |
+| 10 | [Instalación y preparación](#10-instalación-y-preparación) |
+| 11 | [Documentación de ejecución y plan de calidad](#11-documentación-de-ejecución-y-plan-de-calidad) |
+| 12 | [Distribución](#12-distribución) |
+| 13 | [Manuales](#13-manuales) |
+| 14 | [Conclusiones](#14-conclusiones) |
+| 15 | [Anexos](#15-anexos) |
+| 16 | [Índice de tablas e imágenes](#16-índice-de-tablas-e-imágenes) |
+| 17 | [Bibliografía y referencias](#17-bibliografía-y-referencias) |
 
 ---
 
@@ -478,7 +479,167 @@ flowchart LR
 
 ---
 
-## 9. Instalación y preparación
+## 9. Estructura de clases del proyecto
+
+La aplicación sigue el patrón **MVVM (Model-View-ViewModel)** separando el código en tres capas bien diferenciadas:
+
+- **Model (Datos):** los paquetes `data.model`, `data.repository` y `data.remote`. Aquí viven los datos: qué son, dónde se guardan y cómo se obtienen, sin saber nada de la interfaz.
+- **ViewModel:** cada pantalla con lógica propia tiene el suyo. Expone el estado como `StateFlow` o `mutableStateOf`, maneja las operaciones asíncronas con corrutinas y no toca ningún composable directamente.
+- **View (UI):** los composables de `ui.screens` y `ui.components`. Solo leen lo que el ViewModel expone y le delegan cualquier acción.
+
+Esto significa que ninguna pantalla llama a Firebase ni a Retrofit por su cuenta: todo pasa por las interfaces `AuthRepository` y `PartidaRepository`, cuyas implementaciones concretas se pueden cambiar sin tocar la lógica de ninguna pantalla. Los datos estáticos del juego (`Pokedex`, `CombateRepository`, `RutasRepository`) se cargan una sola vez como singletons en memoria.
+
+---
+
+### `com.example.professionalnuzlocker` / Raíz
+
+- **[`MainActivity`](app/src/main/java/com/example/professionalnuzlocker/MainActivity.kt)**: Punto de entrada. Inicializa `AudioManager`, activa el modo edge-to-edge y lanza `NavegadorPrincipal` como raíz del árbol Compose. El ciclo de vida de la música queda vinculado al de la actividad (`onResume` / `onPause` / `onStop`).
+
+---
+
+### `data.model` / Modelos de dominio
+
+Data classes que representan las entidades del juego. Son lo que se serializa en Firestore y viaja entre capas.
+
+- **[`Partida`](app/src/main/java/com/example/professionalnuzlocker/data/model/Partida.kt)**: Snapshot completo de una partida Nuzlocke: versión del juego, datos del jugador, equipo activo, PC, muertos, historial de combates, encuentros por ruta, vidas restantes y contador de consultas a NuzBot.
+- **[`Pokemon`](app/src/main/java/com/example/professionalnuzlocker/data/model/Pokemon.kt)**: Especie de la Pokédex con sus datos estáticos: tipos, habilidades posibles, línea evolutiva, rutas de captura y método de evolución.
+- **[`PokemonCapturado`](app/src/main/java/com/example/professionalnuzlocker/data/model/PokemonCapturado.kt)**: El Pokémon que ya es del jugador, con mote, nivel, habilidad elegida, estado actual (`EQUIPO` / `PC` / `MUERTO`) y causa de muerte si procede.
+- **[`CombateImportante`](app/src/main/java/com/example/professionalnuzlocker/data/model/CombateImportante.kt)**: Un combate relevante del Nuzlocke (rival, gimnasio, Equipo Plasma o Liga) con el equipo rival ya montado y la ruta a partir de la cual se desbloquea.
+- **[`PokemonRival`](app/src/main/java/com/example/professionalnuzlocker/data/model/PokemonRival.kt)**: Pokémon del equipo de un entrenador rival: especie, nivel, movimientos con su tipo, habilidad y objeto equipado.
+- **[`EncuentroRuta`](app/src/main/java/com/example/professionalnuzlocker/data/model/EncuentroRuta.kt)**: Lo que pasó en una ruta: si fue visitada, cómo terminó el encuentro (capturado o perdido) y el ID del Pokémon obtenido.
+- **[`ResultadoCombate`](app/src/main/java/com/example/professionalnuzlocker/data/model/ResultadoCombate.kt)**: Resultado de un combate importante: si el jugador perdió y con qué equipo lo afrontó.
+- **[`CausaMuerte`](app/src/main/java/com/example/professionalnuzlocker/data/model/CausaMuerte.kt)**: Detalle de cómo murió un Pokémon: tipo de entrenador responsable, ataque usado, especie asesina y combate donde ocurrió.
+- **[`RutasEntrada`](app/src/main/java/com/example/professionalnuzlocker/data/model/RutasEntrada.kt)**: Asocia un enum `Rutas` con la lista de IDs de Pokémon que pueden aparecer en esa ruta.
+- **[`EstadoRutaRegistro`](app/src/main/java/com/example/professionalnuzlocker/data/model/EstadoRutaRegistro.kt)**: Clase sellada que modela los pasos del flujo de captura en ruta: `RutaLibre`, `PokemonElegido`, `PokemonCapturado` o `PokemonDebilitado`.
+- **[`ChatPregunta`](app/src/main/java/com/example/professionalnuzlocker/data/model/ChatPregunta.kt)**: Petición al servicio de IA con el texto del jugador y el ID de la partida activa para dar contexto a la respuesta.
+- **[`ChatRespuesta`](app/src/main/java/com/example/professionalnuzlocker/data/model/ChatRespuesta.kt)**: Respuesta del servidor con el texto que genera NuzBot.
+
+---
+
+### `data.model.enum_classes` / Enumeraciones
+
+Valores fijos del dominio. Varios llevan propiedades extra (nombre visible, color, drawable) para usarse directamente en la UI sin necesitar transformaciones intermedias.
+
+- **[`EstadoPokemon`](app/src/main/java/com/example/professionalnuzlocker/data/model/enum_classes/EstadoPokemon.kt)**: Dónde está un Pokémon capturado: `EQUIPO`, `PC` o `MUERTO`.
+- **[`MetodoEvolutivo`](app/src/main/java/com/example/professionalnuzlocker/data/model/enum_classes/MetodoEvolutivo.kt)**: Cómo evoluciona un Pokémon: nivel, piedra, intercambio, amistad o ninguno (si ya es su etapa final).
+- **[`PokemonInicial`](app/src/main/java/com/example/professionalnuzlocker/data/model/enum_classes/PokemonInicial.kt)**: Los tres iniciales de Negro/Blanco (Snivy, Tepig, Oshawott). Cambia el equipo rival en varios combates del juego.
+- **[`ResultadoEncuentro`](app/src/main/java/com/example/professionalnuzlocker/data/model/enum_classes/ResultadoEncuentro.kt)**: Lo que puede pasar en un encuentro: `SIN_VISITAR`, `CAPTURADO` o `PERDIDO`.
+- **[`Rutas`](app/src/main/java/com/example/professionalnuzlocker/data/model/enum_classes/Rutas.kt)**: Todas las rutas y localidades de Negro/Blanco donde puede haber encuentro, con nombre para mostrar y drawable asociado.
+- **[`RutasNavegacion`](app/src/main/java/com/example/professionalnuzlocker/data/model/enum_classes/RutasNavegacion.kt)**: Las rutas internas que usa el `NavController` para moverse entre pantallas.
+- **[`TipoCombate`](app/src/main/java/com/example/professionalnuzlocker/data/model/enum_classes/TipoCombate.kt)**: Categoría de un combate importante: rival, líder de gimnasio, Equipo Plasma o Liga Pokémon.
+- **[`TipoEntrenador`](app/src/main/java/com/example/professionalnuzlocker/data/model/enum_classes/TipoEntrenador.kt)**: Tipo de entrenador que puede matar a un Pokémon, con su nombre legible para mostrarlo en pantalla.
+- **[`TipoPokemon`](app/src/main/java/com/example/professionalnuzlocker/data/model/enum_classes/TipoPokemon.kt)**: Tipos del juego, cada uno con su `Color` de Compose para las píldoras de tipo de la UI.
+- **[`VersionJuego`](app/src/main/java/com/example/professionalnuzlocker/data/model/enum_classes/VersionJuego.kt)**: Versión elegida (Negro o Blanco). Afecta a los Pokémon disponibles en algunas rutas y al legendario del combate final.
+
+---
+
+### `data.repository` / Contratos e implementaciones estáticas
+
+Interfaces que definen los contratos de acceso a datos, más los singletons con datos estáticos del juego que se cargan una sola vez en memoria.
+
+- **[`AuthRepository`](app/src/main/java/com/example/professionalnuzlocker/data/repository/AuthRepository.kt)**: Interfaz con las cuatro operaciones de autenticación: `login`, `registro`, `cerrarSesion` y `sesionActiva`. La implementación concreta es `FirebaseAuthRepository`.
+- **[`PartidaRepository`](app/src/main/java/com/example/professionalnuzlocker/data/repository/PartidaRepository.kt)**: Interfaz con el ciclo de vida completo de una partida: crear, consultar, actualizar encuentros, actualizar combates, marcar fin e incrementar consultas a la IA. La implementación concreta es `FirestorePartidaRepository`.
+- **[`Pokedex`](app/src/main/java/com/example/professionalnuzlocker/data/repository/Pokedex.kt)**: Singleton con los 156 Pokémon de Teselia disponibles en Negro/Blanco. Expone `getPokemon()` para la lista completa y `getPokemonById()` para buscar por ID.
+- **[`CombateRepository`](app/src/main/java/com/example/professionalnuzlocker/data/repository/CombateRepository.kt)**: Singleton con los 30 combates importantes del juego (rivales, gimnasios, Equipo Plasma y Liga). Los equipos rivales se generan en función del Pokémon inicial del jugador y la versión elegida.
+- **[`RutasRepository`](app/src/main/java/com/example/professionalnuzlocker/data/repository/RutasRepository.kt)**: Singleton que cruza cada ruta del juego con los Pokémon capturables en ella, usando el enum `Rutas` y los datos de captura de la `Pokedex`.
+
+---
+
+### `data.remote` / Acceso a servicios externos
+
+Implementaciones concretas de los repositorios que hablan con Firebase y con el backend de NuzBot. Todas las llamadas asíncronas de Firebase se envuelven en corrutinas con `suspendCancellableCoroutine`.
+
+- **[`FirebaseAuthRepository`](app/src/main/java/com/example/professionalnuzlocker/data/remote/FirebaseAuthRepository.kt)**: Implementación de `AuthRepository` sobre Firebase Authentication. Convierte las callbacks de Firebase en corrutinas y traduce sus errores al español.
+- **[`FirestorePartidaRepository`](app/src/main/java/com/example/professionalnuzlocker/data/remote/FirestorePartidaRepository.kt)**: Implementación de `PartidaRepository` sobre Cloud Firestore. Tiene una caché en memoria para no releer el documento cada vez que se cambia de pestaña; se invalida automáticamente en cada escritura.
+- **[`ChatApiService`](app/src/main/java/com/example/professionalnuzlocker/data/remote/ChatApiService.kt)**: Interfaz Retrofit para el endpoint `POST /chat` del backend de NuzBot. Recibe un `ChatPregunta` con el mensaje del jugador y el ID de partida, y devuelve una `ChatRespuesta`.
+- **[`ChatApi`](app/src/main/java/com/example/professionalnuzlocker/data/remote/ChatApiService.kt)**: Singleton que provee la instancia de `ChatApiService` lista para usar, con un `OkHttpClient` configurado a 60 segundos de timeout para aguantar las respuestas lentas del modelo.
+
+---
+
+### `ui.screens` / Pantallas y ViewModels
+
+Cada pantalla tiene su propio composable y, si tiene lógica de negocio, su `ViewModel`. Las pantallas puramente informativas no tienen ViewModel y leen directamente los singletons de datos estáticos.
+
+#### Autenticación / `ui.screens.auth`
+
+- **[`PantallaLogin`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/auth/PantallaLogin.kt)**: Formulario de inicio de sesión con correo y contraseña, validación local de formato y errores de Firebase traducidos.
+- **[`PantallaRegistroAuth`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/auth/PantallaRegistroAuth.kt)**: Formulario de registro con validación de formato de correo, longitud mínima de contraseña y comprobación de que ambos campos coinciden.
+- **[`AuthViewModel`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/auth/AuthViewModel.kt)**: ViewModel compartido por las dos pantallas de autenticación. Gestiona los estados `cargando` y `error`, y expone `login`, `registrar` y `cambiarContrasena`.
+
+#### Menú principal / `ui.screens.home` y `ui.screens.guide`
+
+- **[`PantallaInicio`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/home/PantallaInicio.kt)**: Menú principal con carrusel de tres opciones (Continuar, Nueva Partida, Guía Nuzlocke) y los iconos de cuenta, volumen y cierre de sesión.
+- **[`PantallaInicioViewModel`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/home/PantallaInicioViewModel.kt)**: Consulta Firestore para saber si hay partida activa, gestiona el borrado antes de crear una nueva y controla el cambio de contraseña desde el diálogo de cuenta.
+- **[`PantallaGuia`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/guide/PantallaGuia.kt)**: Pantalla informativa con seis tarjetas expandibles sobre las reglas del Nuzlocke, presentadas como diálogos estilo RPG con la Prof. Encina. No tiene ViewModel propio.
+
+#### Configuración de partida / `ui.screens.form`
+
+- **[`PantallaFormulario`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/form/PantallaFormulario.kt)**: Flujo guiado para configurar la nueva partida (versión, sexo, nombre e inicial) con diálogos secuenciales y selecciones visuales presentados por la Prof. Encina.
+- **[`PantallaFormularioViewModel`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/form/PantallaFormularioViewModel.kt)**: Controla el avance por los pasos del formulario, valida cada selección y persiste la partida en Firestore al cerrar el último diálogo.
+
+#### Registro de la aventura / `ui.screens.register`
+
+- **[`PantallaRegistro`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/register/PantallaRegistro.kt)**: Pantalla principal del juego: lista combinada de rutas y combates en orden cronológico, con la barra superior mostrando el equipo activo y el contador de vidas.
+- **[`PantallaRegistroViewModel`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/register/PantallaRegistroViewModel.kt)**: Gestiona toda la lógica del registro: qué ruta está activa, captura o pérdida de Pokémon, combates con el equipo usado, muertes manuales, sistema de vidas y detección del fin del Nuzlocke.
+- **[`RegistroItem`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/register/RegistroItem.kt)**: Clase sellada que representa un elemento de la lista: puede ser `RutaItem` (ruta de captura) o `CombateItem` (combate importante).
+
+#### Gestión del equipo / `ui.screens.infoRun`
+
+- **[`PantallaDatosJuego`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/infoRun/PantallaDatosJuego.kt)**: Pantalla con tres pestañas (Equipo, PC, Cementerio) para ver, editar, mover y registrar evoluciones de todos los Pokémon de la partida.
+- **[`PantallaDatosJuegoViewModel`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/infoRun/PantallaDatosJuegoViewModel.kt)**: Carga el equipo desde Firestore, gestiona las ediciones de mote, nivel y habilidad, las evoluciones, los movimientos entre equipo y PC, y la sustitución de miembros cuando el equipo está al completo.
+
+#### Pokédex / `ui.screens.pokedex`
+
+- **[`PantallaPokedex`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/pokedex/PantallaPokedex.kt)**: Cuadrícula de los 156 Pokémon de Teselia con buscador por nombre en tiempo real. Toca cualquiera para ver su ficha completa. No tiene ViewModel propio; lee directamente el singleton `Pokedex`.
+
+#### Asistente IA / `ui.screens.chat`
+
+- **[`PantallaChat`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/chat/PantallaChat.kt)**: Historial de conversación con NuzBot en burbujas de chat, con indicador de carga mientras espera respuesta y el campo de entrada deshabilitado durante el procesamiento.
+- **[`PantallaChatViewModel`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/chat/PantallaChatViewModel.kt)**: Obtiene el token de Firebase ID, carga el contexto de la partida desde Firestore, envía la pregunta al endpoint REST mediante `ChatApiService` e incrementa el contador de consultas.
+
+#### Estadísticas / `ui.screens.stats`
+
+- **[`PantallaEstadisticas`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/stats/PantallaEstadisticas.kt)**: Pantalla de estadísticas finales con ocho fases progresivas: resultado, datos generales, Pokémon más usados, combates más mortales, rivales más letales, distribución de tipos, consultas a NuzBot y exportación PDF.
+- **[`PantallaEstadisticasViewModel`](app/src/main/java/com/example/professionalnuzlocker/ui/screens/stats/PantallaEstadisticasViewModel.kt)**: Calcula todos los rankings y la distribución de tipos a partir de los datos de Firestore. Expone los resultados a través de `EstadisticasData`, `EntradaUsado`, `EntradaMortal` y `EntradaAsesino`.
+
+---
+
+### `ui.components` / Componentes reutilizables
+
+Composables de uso general que aparecen en más de una pantalla.
+
+- **[`CuadroDialogoComponente`](app/src/main/java/com/example/professionalnuzlocker/ui/components/CuadroDialogoComponente.kt)**: Cuadro de diálogo estilo RPG con texto paginado y el avatar de la Prof. Encina. Lo usan `PantallaGuia` y `PantallaFormulario`.
+- **[`ImagenFormularioComponente`](app/src/main/java/com/example/professionalnuzlocker/ui/components/ImagenFormularioComponente.kt)**: Imagen seleccionable del formulario de nueva partida (carátulas de versión del juego y personajes del jugador).
+- **[`PokemonPokedexComponente`](app/src/main/java/com/example/professionalnuzlocker/ui/components/PokemonPokedexComponente.kt)**: Tarjeta de Pokémon para la Pokédex con sprite, nombre y píldoras de tipo.
+- **[`RutaItemComponente`](app/src/main/java/com/example/professionalnuzlocker/ui/components/RutaItemComponente.kt)**: Elemento de la lista de registro para una ruta de captura: imagen, nombre, estado y selector de Pokémon cuando la ruta está activa.
+- **[`CombateItemComponente`](app/src/main/java/com/example/professionalnuzlocker/ui/components/CombateItemComponente.kt)**: Elemento de la lista de registro para un combate importante: imagen del rival, selector del equipo usado y botones para registrar ganar o perder.
+
+---
+
+### `ui.navigation` / Navegación
+
+- **[`NavegadorPrincipal`](app/src/main/java/com/example/professionalnuzlocker/ui/navigation/NavegadorPrincipal.kt)**: El `NavHost` principal. Declara todas las rutas de navegación y decide la pantalla inicial según si hay sesión activa en Firebase. También pasa `AudioManager` a las pantallas que manejan audio.
+- **[`MiBottomBar`](app/src/main/java/com/example/professionalnuzlocker/ui/navigation/MiBottomBar.kt)**: Barra de navegación inferior con cuatro destinos (Registro, Pokédex, Pokémon e IA), visible solo en las pantallas de la zona de juego.
+
+---
+
+### `ui.theme` / Tema visual
+
+- **[`Color`](app/src/main/java/com/example/professionalnuzlocker/ui/theme/Color.kt)**: Paleta de la aplicación: rojos, tonos oscuros y claros que definen su identidad visual.
+- **[`Theme`](app/src/main/java/com/example/professionalnuzlocker/ui/theme/Theme.kt)**: Configuración del tema Material 3 con esa paleta aplicada a toda la app.
+- **[`Type`](app/src/main/java/com/example/professionalnuzlocker/ui/theme/Type.kt)**: Tipografía del tema Material 3.
+
+---
+
+### `ui.utils` / Utilidades
+
+- **[`AudioManager`](app/src/main/java/com/example/professionalnuzlocker/ui/utils/AudioManager.kt)**: Controla toda la reproducción de audio: música de fondo en bucle, música de batalla y efectos de sonido. Implementa el fundido cruzado de 1 segundo entre temas y su ciclo de vida queda atado al de `MainActivity`.
+- **[`GameSound`](app/src/main/java/com/example/professionalnuzlocker/ui/utils/GameSound.kt)**: Enum con los tres efectos de sonido disponibles: `CLICK` (botones), `LEVEL_UP` (subida de nivel) y `CAPTURE` (captura de Pokémon).
+- **[`PdfGenerator`](app/src/main/java/com/example/professionalnuzlocker/ui/utils/PdfGenerator.kt)**: Genera el informe PDF a partir de un `EstadisticasData` y lo guarda en la carpeta `Downloads` del dispositivo usando la API `MediaStore`.
+
+---
+
+## 10. Instalación y preparación
 
 ### Procedimientos para hacer funcionar el proyecto
 
@@ -509,7 +670,7 @@ En un entorno de equipo, lo adecuado sería utilizar GitHub Issues, para registr
 
 ---
 
-## 10. Documentación de ejecución y plan de calidad
+## 11. Documentación de ejecución y plan de calidad
 
 ### Procedimientos operativos
 
@@ -582,7 +743,7 @@ Las pruebas del proyecto son de tipo manual, debido a la sencillez de estas. Est
 
 ---
 
-## 11. Distribución
+## 12. Distribución
 
 ### Tecnología de distribución
 
@@ -606,13 +767,13 @@ El backend de NuzBot no necesita proceso de distribución propio: Render desplie
 
 ---
 
-## 12. Manuales
+## 13. Manuales
 
 Para entender cómo usar la aplicación desde su instalación hasta el final de una partida, está disponible el [`Manual de Usuario`](info/manual_usuario.md), con instrucciones claras para cualquier perfil de usuario.
 
 ---
 
-## 13. Conclusiones
+## 14. Conclusiones
 
 ### Informe final
 
@@ -675,7 +836,7 @@ Estas son las cosas que quedaron fuera, principalmente por tiempo o presupuesto:
 
 ---
 
-## 14. Anexos
+## 15. Anexos
 
 ### Diagramas ampliados
 
@@ -784,7 +945,7 @@ Durante el desarrollo se registraron las siguientes incidencias significativas:
 
 ---
 
-## 15. Índice de tablas e imágenes
+## 16. Índice de tablas e imágenes
 
 ### Tablas
 
@@ -794,9 +955,9 @@ Durante el desarrollo se registraron las siguientes incidencias significativas:
 | 2 | Características principales de la aplicación | [2. Descripción del proyecto](#2-descripción-del-proyecto) |
 | 3 | Especificaciones técnicas | [8. Diseño](#8-diseño) |
 | 4 | Identificación y evaluación de riesgos | [7. Plan de gestión de riesgos](#7-plan-de-gestión-de-riesgos) |
-| 5 | Registro de pruebas por módulo funcional | [10. Documentación de ejecución y plan de calidad](#10-documentación-de-ejecución-y-plan-de-calidad) |
-| 6 | Resultados esperados frente a objetivos | [13. Conclusiones](#13-conclusiones) |
-| 7 | Registro de incidencias y resoluciones | [14. Anexos](#14-anexos) |
+| 5 | Registro de pruebas por módulo funcional | [11. Documentación de ejecución y plan de calidad](#11-documentación-de-ejecución-y-plan-de-calidad) |
+| 6 | Resultados esperados frente a objetivos | [14. Conclusiones](#14-conclusiones) |
+| 7 | Registro de incidencias y resoluciones | [15. Anexos](#15-anexos) |
 
 ### Imágenes y diagramas
 
@@ -809,13 +970,13 @@ Durante el desarrollo se registraron las siguientes incidencias significativas:
 | 5 | Boceto/Resultado Pantalla Datos del Juego | [8. Diseño](#8-diseño) |
 | 6 | Boceto/Resultado Pantalla Pokédex | [8. Diseño](#8-diseño) |
 | 7 | Boceto/Resultado Pantalla Estadísticas | [8. Diseño](#8-diseño) |
-| 8 | Diagrama de flujo de navegación (Mermaid) | [14. Anexos](#14-anexos) |
-| 9 | Diagrama de flujo de datos de la partida (Mermaid) | [14. Anexos](#14-anexos) |
-| 10 | Árbol de estructura de datos en Firestore | [14. Anexos](#14-anexos) |
+| 8 | Diagrama de flujo de navegación (Mermaid) | [15. Anexos](#15-anexos) |
+| 9 | Diagrama de flujo de datos de la partida (Mermaid) | [15. Anexos](#15-anexos) |
+| 10 | Árbol de estructura de datos en Firestore | [15. Anexos](#15-anexos) |
 
 ---
 
-## 16. Bibliografía y referencias
+## 17. Bibliografía y referencias
 
 ### Documentación técnica oficial
 
