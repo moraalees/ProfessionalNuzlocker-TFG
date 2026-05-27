@@ -56,7 +56,7 @@ Como aplicación de registro de Nuzlockes, no hay demasiada variedad. No obstant
 
 A continuación se resumen las principales alternativas existentes y sus limitaciones:
 
-| Aplicación / Herramienta | Plataforma | Proósito de Nuzlocke | Seguimiento de Pokémon | IA integrada |
+| Aplicación / Herramienta | Plataforma | Propósito de Nuzlocke | Seguimiento de Pokémon | IA integrada |
 |--------------------------|-----------|:----------------------:|:----------------------:|:------------:|
 | Hojas de cálculo (Google Sheets) | Web / Móvil | ✗ | Manual | ✗ |
 | Nuzlocke Tracker (web) | Web | ✓ | Orientado pero molesto | ✗ |
