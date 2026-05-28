@@ -777,6 +777,11 @@ Las pruebas del proyecto son de tipo manual, debido a la sencillez de estas. Est
 - Verificación del cálculo correcto de rankings y distribuciones al finalizar la partida.
 - Generación y apertura del archivo PDF desde la carpeta `Downloads/`, verificando el contenido del documento.
 
+#### Seguridad
+- Intento de inicio de sesión con credenciales incorrectas, verificando que Firebase Auth rechaza el acceso y que ningún dato de otra cuenta queda expuesto.
+- Verificación de que las reglas de seguridad de Firestore impiden leer o escribir la partida de otro usuario: acceder a un documento con un UID distinto al autenticado devuelve un error de permisos.
+- Verificación de que las llamadas al endpoint de NuzBot sin un Firebase ID Token válido son rechazadas por el backend con un error de autenticación.
+
 ### Indicadores de calidad
 
 **Estabilidad:** No hubo ningún crash no controlado durante las pruebas en dispositivo físico. Los errores esperables (sin conexión, backend sin respuesta) están manejados con mensajes visibles al usuario.
