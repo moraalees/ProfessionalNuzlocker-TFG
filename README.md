@@ -819,7 +819,7 @@ Primero se verifica que `main` es estable y todo lo previsto está hecho. Luego,
 
 El APK firmado queda en `app/release/app-release.apk`. A partir de ahí hay dos opciones para distribuirlo:
 - **Transferencia directa:** copiar el APK al dispositivo por USB o cualquier otro medio, localizarlo con el explorador y ejecutarlo. Android pedirá habilitar instalación desde orígenes desconocidos si no está activado.
-- **GitHub Release:** crear una release asociada al commit correspondiente, adjuntar el APK como asset y añadir las notas de versión. Cualquiera con acceso al repositorio puede descargarlo desde esa URL.
+- **GitHub Release:** crear una release asociada al commit correspondiente, adjuntar el APK como asset y añadir las notas de versión. Cualquiera con acceso al repositorio puede descargarlo desde esa URL. La versión actual está disponible en la [**Release v1.0**](https://github.com/moraalees/ProfessionalNuzlocker-TFG/releases/tag/v1.0).
 
 El backend de NuzBot no necesita proceso de distribución propio: Render despliega automáticamente cualquier actualización del repositorio del backend.
 
