@@ -794,6 +794,58 @@ Las pruebas del proyecto son de tipo manual, debido a la sencillez de estas. Est
 
 **Corrección del PDF generado:** El archivo exportado tiene todos los datos ordenados, se abre correctamente en el visor del dispositivo y se guarda en la ruta esperada.
 
+### Tests unitarios automatizados
+
+El proyecto incluye una suite de tests unitarios JVM que verifican el comportamiento de los modelos de datos del dominio. Se ejecutan en local sin emulador ni dispositivo físico y no requieren dependencias adicionales (usan JUnit 4, ya incluido por defecto).
+
+| Archivo de test | Clase bajo test | Tests |
+|-----------------|-----------------|:-----:|
+| [`PokemonCapturadoTest`](app/src/test/java/com/example/professionalnuzlocker/data/model/PokemonCapturadoTest.kt) | `PokemonCapturado` | 7 |
+| [`PartidaTest`](app/src/test/java/com/example/professionalnuzlocker/data/model/PartidaTest.kt) | `Partida` | 9 |
+| [`EnumsTest`](app/src/test/java/com/example/professionalnuzlocker/data/model/enum_classes/EnumsTest.kt) | `PokemonInicial`, `VersionJuego`, `EstadoPokemon` | 9 |
+| **Total** | | **25** |
+
+#### `PokemonCapturadoTest`
+
+Verifica el comportamiento del modelo [`PokemonCapturado`](app/src/main/java/com/example/professionalnuzlocker/data/model/PokemonCapturado.kt):
+
+- El estado inicial de un Pokémon recién creado es `EQUIPO`.
+- El mote es `null` por defecto y puede modificarse.
+- El nivel puede incrementarse.
+- Al morir, el estado cambia a `MUERTO` y se registra correctamente la `CausaMuerte` (entrenador responsable y ataque usado).
+- Dos instancias con los mismos datos son iguales; con distinto `id`, no lo son.
+
+#### `PartidaTest`
+
+Verifica los valores por defecto y la gestión de listas de [`Partida`](app/src/main/java/com/example/professionalnuzlocker/data/model/Partida.kt):
+
+- Una partida nueva tiene exactamente **10 vidas**, `finDeLocke = false` y `consultasIA = 0`.
+- El equipo, PC y lista de muertos comienzan vacíos.
+- Se puede añadir un Pokémon al equipo activo.
+- Un Pokémon puede moverse correctamente del equipo al PC.
+- Al morir, un Pokémon desaparece del equipo y aparece en la lista de muertos con su causa de muerte registrada.
+- El nombre del jugador y la versión del juego se conservan correctamente.
+
+#### `EnumsTest`
+
+Verifica los valores de los enums del dominio:
+
+- [`PokemonInicial`](app/src/main/java/com/example/professionalnuzlocker/data/model/enum_classes/PokemonInicial.kt): tiene exactamente 3 entradas con los nombres `"Snivy"`, `"Tepig"` y `"Oshawott"`.
+- [`VersionJuego`](app/src/main/java/com/example/professionalnuzlocker/data/model/enum_classes/VersionJuego.kt): tiene exactamente 2 versiones (`"Negro"` y `"Blanco"`) y son distintas entre sí.
+- [`EstadoPokemon`](app/src/main/java/com/example/professionalnuzlocker/data/model/enum_classes/EstadoPokemon.kt): tiene exactamente 3 estados (`EQUIPO`, `PC`, `MUERTO`) todos distintos entre sí.
+
+#### Cómo ejecutar los tests
+
+Desde la raíz del proyecto:
+
+```bash
+./gradlew :app:testDebugUnitTest
+```
+
+Los resultados se generan en `app/build/test-results/testDebugUnitTest/`.
+
+---
+
 ### Métodos de verificación
 
 **Prueba en dispositivo físico:** El método principal. Se recorrieron todos los flujos completos en un Android real a lo largo de todo el desarrollo, no solo al final.
@@ -1019,8 +1071,9 @@ Durante el desarrollo se registraron las siguientes incidencias significativas:
 | 3 | Especificaciones técnicas | [8. Diseño](#8-diseño) |
 | 4 | Identificación y evaluación de riesgos | [7. Plan de gestión de riesgos](#7-plan-de-gestión-de-riesgos) |
 | 5 | Registro de pruebas por módulo funcional | [11. Documentación de ejecución y plan de calidad](#11-documentación-de-ejecución-y-plan-de-calidad) |
-| 6 | Resultados esperados frente a objetivos | [14. Conclusiones](#14-conclusiones) |
-| 7 | Registro de incidencias y resoluciones | [15. Anexos](#15-anexos) |
+| 6 | Suite de tests unitarios automatizados | [11. Documentación de ejecución y plan de calidad](#11-documentación-de-ejecución-y-plan-de-calidad) |
+| 7 | Resultados esperados frente a objetivos | [14. Conclusiones](#14-conclusiones) |
+| 8 | Registro de incidencias y resoluciones | [15. Anexos](#15-anexos) |
 
 ### Imágenes y diagramas
 
